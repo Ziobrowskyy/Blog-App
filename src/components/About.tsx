@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-export class About extends Component<any, any> {
+class About extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
@@ -14,3 +14,4 @@ export class About extends Component<any, any> {
         );
     }
 }
+export default About;

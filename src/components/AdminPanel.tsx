@@ -4,8 +4,7 @@ export class AdminPanel extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
-    }
-
+class AdminPanel extends Component<any, any> {
     render() {
         return (
             <>
@@ -14,3 +13,5 @@ export class AdminPanel extends Component<any, any> {
         );
     }
 }
+
+export default AdminPanel;
