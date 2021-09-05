@@ -7,7 +7,8 @@ import path from "path";
 
 //express app and port to run at
 const app = express()
-const port = 8000
+
+app.set("port", process.env.PORT || 3000)
 
 //routing static files (including images)
 app.use("/static", express.static("uploads"))
@@ -53,8 +54,8 @@ app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
     console.log(__dirname)
     // console.log(path.join(__dirname, "..", "..", "blog-app/build"))
-    console.log(`Server is running on port ${port}`)
+    console.log(`Server is running on port ${process.env.PORT}`)
 })
