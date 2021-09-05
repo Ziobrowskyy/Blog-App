@@ -9,7 +9,7 @@
       "esnext.asynciterable"
     ],
     "sourceMap": true,
-    "outDir": "./server/dist",
+    "outDir": "./server/out",
     "moduleResolution": "node",
     "removeComments": true,
     "noImplicitAny": true,
@@ -25,13 +25,14 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "./server"
+    "baseUrl": "./server",
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "./server/src/z**/*.tsx",
+    "./server/src/**/*.tsx",
     "./server/src/**/*.ts"
   ]
 }

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/dist/index.js"
+    "postinstall": "tsc",
+    "start": "node server/out/index.js"
   },
   "keywords": [],
   "author": "",
