@@ -1,7 +1,6 @@
 import {Component} from "react";
 import {Link} from "react-router-dom"
-import {ReactComponent as MenuButton} from "../svg/menu-black-18dp.svg";
-import {Navbar, NavbarBrand, Nav, NavLink, Container} from "react-bootstrap";
+import {Navbar, Nav} from "react-bootstrap";
 
 type MyProps = {}
 type MyState = {

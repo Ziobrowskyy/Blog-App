@@ -24,7 +24,7 @@ function App() {
                     <Route path={"/admin-panel"} component={AdminPanel}/>
                     <Route path={"*"} component={PageNotFound}/>
                 </Switch>
-                <Footer/>
+                {/*<Footer/>*/}
                 </Container>
             </Router>
         </div>

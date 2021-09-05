@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import api from "../api";
+import api from "../API";
 import {Post} from "./Post";
 import {Alert, CardColumns} from "react-bootstrap";
 
