@@ -31,7 +31,7 @@
     "node_modules"
   ],
   "include": [
-    "./server/src/**/*.tsx",
+    "./server/src/z**/*.tsx",
     "./server/src/**/*.ts"
   ]
 }
