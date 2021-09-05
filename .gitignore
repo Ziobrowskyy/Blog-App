@@ -3,8 +3,8 @@
 yarn.lock
 
 #client folder specific
-client/build
+/client/build
 
 #server folder specific
-server/dist
-server/uploads/*
+/server/dist
+/server/uploads/*
