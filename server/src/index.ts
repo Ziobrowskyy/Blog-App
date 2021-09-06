@@ -46,7 +46,7 @@ const gridFSStorage = new GridFsStorage({
     )
 })
 
-const localImageUplaod = multer({storage: localStorage}).array("files")
+const localImageUpload = multer({storage: localStorage}).array("files")
 const gridFSImageUpload = multer({storage: gridFSStorage}).array("files")
 
 app.use(express.static(path.join(__dirname, "../../client/build")));
@@ -55,10 +55,11 @@ Database.init(err => {
     console.warn("Failed to connect to database!")
     throw(err)
 })
+
 if (process.env.ENV == "Heroku" || true)
     app.post("/api/post", gridFSImageUpload, api.createPost)
 else
-    app.post("/api/post", localImageUplaod, api.createPost)
+    app.post("/api/post", localImageUpload, api.createPost)
 app.put("/api/post/:id", api.updatePost)
 app.delete("/api/post/:id", api.deletePost)
 app.get("/api/post/:id", api.getPost)
