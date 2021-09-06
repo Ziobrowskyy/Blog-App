@@ -2,8 +2,8 @@ import axios, {AxiosResponse} from "axios";
 
 
 const API = axios.create({
-    baseURL: "http://192.168.0.52:8000/api",
-
+    // baseURL: "http://192.168.0.52:8000/api",
+    baseURL: process.env.REACT_APP_API_URL,
 });
 
 interface IApi {
