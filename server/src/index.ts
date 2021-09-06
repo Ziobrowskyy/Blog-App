@@ -40,8 +40,10 @@ Database.init(err => {
     console.warn("Failed to connect to database!")
     throw(err)
 })
-
-app.post("/api/post", imageUpload, api.createPost)
+if(process.env.ENV == "Heroku")
+    app.post("/api/post", api.createPostAndSaveFiles)
+else
+    app.post("/api/post", imageUpload, api.createPost)
 app.put("/api/post/:id", api.updatePost)
 app.delete("/api/post/:id", api.deletePost)
 app.get("/api/post/:id", api.getPost)
