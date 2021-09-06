@@ -1,4 +1,3 @@
-import * as Database from "./database";
 import Post from "./post";
 import {Request, Response} from "express";
 import {getFilesCollection, getPostsCollection} from "./database";
