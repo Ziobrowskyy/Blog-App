@@ -5,10 +5,12 @@ import {GridFsStorage} from "multer-gridfs-storage"
 import * as Database from "./database"
 import * as api from "./api"
 import path from "path"
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import ExpressWs from "express-ws";
 
 //express app and port to run at
 const app = express()
+const appWS = ExpressWs(app);
 
 dotenv.config()
 
@@ -76,4 +78,4 @@ app.get("/*", (req, res) => {
 app.listen(process.env.PORT, () => {
     console.log(__dirname)
     console.log(`Server is running on port ${process.env.PORT}`)
-})
+});

@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import {Button, Card, Carousel} from "react-bootstrap";
+import {Button, Card, Carousel, CloseButton} from "react-bootstrap";
 
 interface IProps {
-    data: Data
+    data: PostData
+    onDelete : (id : string) => Promise<void>;
 }
 
-interface Data {
-    id: string;
+export interface PostData {
+    _id: string;
     hasContent: boolean;
     hasFiles: boolean;
     title: string;
@@ -16,14 +17,27 @@ interface Data {
 
 export class Post extends Component<IProps> {
 
+    public constructor(props : IProps) {
+        super(props);
+
+        this.removePost = this.removePost.bind(this);
+
+    }
+
+    protected removePost() : void {
+        
+        this.props.onDelete(this.props.data._id);
+
+    }
+
     render() {
         const {data} = this.props
-        console.log(data)
         return (
             <Card style={{width: '18rem'}}>
                 {data.hasFiles && <RenderImages images={data.files}/>}
                 <Card.Body>
                     <Card.Title>{data.title}</Card.Title>
+                    <CloseButton onClick={this.removePost} />
                     <Card.Text>{data.content}</Card.Text>
                     <Button variant="primary">Go somewhere</Button>
                 </Card.Body>

@@ -1,7 +1,9 @@
 import React, {Component} from "react";
 import api from "../API";
-import {Post} from "./Post";
+import {Post, PostData} from "./Post";
 import {Alert, CardColumns} from "react-bootstrap";
+import HttpRequest from "../decorators/HttpRequest";
+import Apis from "../API";
 
 
 enum Status {
@@ -11,16 +13,25 @@ enum Status {
 }
 
 interface State {
-    data: any;
+    data: Array<PostData>;
     status: Status
 }
 
 export class PostsPage extends Component<any, State> {
     state: State = {
-        data: undefined,
+        data: [],
         status: Status.loading
     }
+
+    public constructor(props : object) {
+        super(props);
+
+        this.removePost = this.removePost.bind(this);
+
+    }
+
     componentDidMount = async () => {
+
         await api.getAllPosts().then(result => {
             this.setState({
                 data: JSON.parse(result.data.data),
@@ -28,34 +39,50 @@ export class PostsPage extends Component<any, State> {
             })
         }).catch(errorMessage => {
             this.setState({
-                data: JSON.stringify(errorMessage),
+                //data: JSON.stringify(errorMessage),
                 status: Status.fail
             })
         })
 
     }
 
-    render() {
+    @HttpRequest
+    protected async removePost(id : string) {
+
+        const response = await Apis.deletePostById(id);
+
+        if (response.data.success) {
+
+            const data = this.state.data.filter(data => data._id !== id);
+
+            this.setState({ data });
+
+        }
+
+    }
+
+    renderByStatus() {
+
         const {status, data} = this.state
+
+        switch (status) {
+            case Status.success:
+                const posts = data.map((data: PostData, i: number) => <Post key={i} data={data} onDelete={this.removePost} />)
+                return <CardColumns>{posts}</CardColumns>
+            case Status.fail:
+                return <Alert>Data could not be loaded</Alert>
+            default:
+                return <Alert>Page is loading</Alert>
+        }
+    }
+
+    render() {
+        
         return (
             <>
-                <p>status: {status}</p>
-                <h1>List of all posts in the database</h1>
-                {renderByStatus(status, data)}
+                { this.renderByStatus() }
             </>
         );
-    }
-}
-
-function renderByStatus(status: Status, data: any) {
-    switch (status) {
-        case Status.success:
-            const posts = data?.map((data: any, i: any) => <Post data={data} key={i}/>)
-            return <CardColumns>{posts}</CardColumns>
-        case Status.fail:
-            return <Alert>Data could not be loaded</Alert>
-        default:
-            return <Alert>Page is loading</Alert>
     }
 }
 

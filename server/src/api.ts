@@ -1,103 +1,65 @@
 import Post from "./post";
 import {Request, Response} from "express";
 import {getFilesCollection, getPostsCollection} from "./database";
+import AppResponse from "./web/AppResponse";
+import { ObjectID } from "mongodb";
 
 export function createPost(req: Request, res: Response) {
     let filenames: string[] = []
+
     if (req.files instanceof Array)
         filenames = req.files.map(el => el.filename ? el.filename : "")
 
     const post = new Post({...req.body, files: filenames})
 
     getPostsCollection().insertOne(post).then(
-        (successResult) => {
-            res.status(200).json({
-                "success": true,
-                "message": successResult
-            })
-        },
-        (failMessage) => {
-            res.status(400).json({
-                "success": false,
-                "message": "Failed to add data to database. " + failMessage
-            })
-        })
+        successResult => new AppResponse(res).success().json(),
+        failMessage => new AppResponse(res).error(`Failed to add data to database. ${failMessage}`).json()
+    )
+
 }
 
 export function updatePost(req: Request, res: Response) {
     const {id, content} = req.params
+
     if (!id || !content) {
-        res.status(400).json({
-            "success": false,
-            "message": "Missing body parameters"
-        })
+
+        new AppResponse(res).error("Missing body parameters").json()
+
     }
-    getPostsCollection().updateOne(
-        {_id: id},
-        {content}
-    ).then(
-        (successResult) => {
-            res.status(200).json({
-                "success": true,
-                "message": successResult
-            })
-        },
-        (failMessage) => {
-            res.status(400).json({
-                "success": false,
-                "message": "Failed to update. " + failMessage
-            })
-        })
+
+    getPostsCollection().updateOne({_id: id},{content}).then(
+        successResult => new AppResponse(res).success().json(),
+        failMessage =>  new AppResponse(res).error(`Failed to delete document. ${failMessage}`).json()
+    )
 }
 
 export async function deletePost(req: Request, res: Response) {
-    const result = await getPostsCollection().deleteOne({_id: req.params.id}).then(
-        (successResult) => {
-            res.status(200).json({
-                "success": true,
-                "message": successResult
-            })
-        },
-        (failMessage) => {
-            res.status(400).json({
-                "success": false,
-                "message": "Failed to delete document. " + failMessage
-            })
-        })
-    console.log(result)
+
+    await getPostsCollection().deleteOne({_id: new ObjectID(req.params.id)}).then(
+        successResult => new AppResponse(res).success().json(),
+        failMessage => new AppResponse(res).error(`Failed to delete document. ${failMessage}`).json()
+    )
+
 }
 
 export async function getPost(req: Request, res: Response) {
-    getPostsCollection().findOne({_id: req.params.id}).then(
-        (successResult) => {
-            res.status(200).json({
-                "success": true,
-                "message": successResult,
-                "data": JSON.stringify(successResult)
-            })
-        },
-        (failMessage) => {
-            res.status(400).json({
-                "success": false,
-                "message": "Failed to find document. " + failMessage
-            })
-        })
 
+    getPostsCollection().findOne({_id: req.params.id}).then(
+        successResult => new AppResponse(res).success(successResult).json(),
+        failMessage => new AppResponse(res).error(`Failed to find document. ${failMessage}`).json()
+    )
 }
 
 export async function getAllPosts(req: Request, res: Response) {
     const documents = await getPostsCollection().find().toArray()
+
     if (documents) {
-        res.status(200).json({
-            "success": true,
-            "message": "",
-            "data": JSON.stringify(documents)
-        })
+        new AppResponse(res).success().with(documents).json();
+
     } else {
-        res.status(400).json({
-            "success": false,
-            "message": "Failed to find documents"
-        })
+        new AppResponse(res).error("Failed to find documents").with(documents).json();
+        
     }
 }
 
