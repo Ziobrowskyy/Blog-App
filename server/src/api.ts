@@ -122,3 +122,22 @@ export async function testConnection(req: Request, res: Response) {
     }).toArray()
     res.json(data)
 }
+
+export async function getFile(req: Request, res: Response) {
+    const {filename} = req.params
+    const files = await getFilesCollection().find({filename: filename}).toArray()
+    if (files.length == 0)
+        res.status(500).json({
+            "success": false,
+            "message": "Failed to find documents"
+        })
+
+    try {
+        getFilesCollection().openDownloadStreamByName(filename).pipe(res)
+    } catch (e) {
+        res.status(500).json({
+            "success": false,
+            "message": "Failed to find documents" + e.message
+        })
+    }
+}
