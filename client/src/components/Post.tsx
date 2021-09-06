@@ -6,6 +6,7 @@ interface IProps {
 }
 
 interface Data {
+    id: string;
     hasContent: boolean;
     hasFiles: boolean;
     title: string;
