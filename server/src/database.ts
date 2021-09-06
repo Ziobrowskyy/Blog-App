@@ -1,4 +1,4 @@
-import {Collection, MongoClient, MongoError} from "mongodb";
+import {Collection, GridFSBucket, MongoClient, MongoError} from "mongodb";
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -8,32 +8,45 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 
 const connectionOptions = "?retryWrites=true&w=majority"
 const dbName = 'blog-app'
-const collectionName = "entries"
 
-const client = new MongoClient(`${uri}/${dbName}${connectionOptions}`, {
+export const mongoURI = `${uri}/${dbName}`
+
+const client = new MongoClient(mongoURI + connectionOptions, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 
-let collection: Collection<any> | undefined = undefined
+let postsCollection: Collection<any> | undefined = undefined
+let usersCollection: Collection<any> | undefined = undefined
+let filesCollection: GridFSBucket | undefined = undefined
 
-function init(callback: ((err: MongoError) => void) | undefined = undefined) {
+export function init(callback: ((err: MongoError) => void) | undefined = undefined) {
     client.connect((err, db) => {
         if (err) {
             console.warn(err);
             if (callback) callback(err)
         }
-        collection = db.db(dbName).collection(collectionName)
+        const database = db.db(dbName)
+        postsCollection = database.collection("entries")
+        usersCollection = database.collection("users")
+        filesCollection = new GridFSBucket(database, {bucketName: "files"})
     })
 }
 
-function getDb(): Collection<any> {
-    if (!collection)
+export function getPostsCollection(): Collection<any> {
+    if (!postsCollection)
         throw new Error("MongoDB collection must be initialized first!")
-    return collection
+    return postsCollection
 }
 
-export {
-    init,
-    getDb
+export function getUsersCollection(): Collection<any> {
+    if (!usersCollection)
+        throw new Error("MongoDB collection must be initialized first!")
+    return usersCollection
+}
+
+export function getFilesCollection(): GridFSBucket {
+    if (!filesCollection)
+        throw new Error("MongoDB collection must be initialized first!")
+    return filesCollection
 }
