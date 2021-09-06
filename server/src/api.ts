@@ -1,6 +1,7 @@
 import * as Database from "./database";
 import Post from "./post";
 import {Request, Response} from "express";
+import {getFilesCollection, getPostsCollection} from "./database";
 
 export function createPost(req: Request, res: Response) {
     const post = new Post({...req.body, files: req.files})
@@ -28,7 +29,7 @@ export function updatePost(req: Request, res: Response) {
             "message": "Missing body parameters"
         })
     }
-    Database.getDb().updateOne(
+    getPostsCollection().updateOne(
         {_id: postId},
         {}
     ).then(
@@ -47,7 +48,7 @@ export function updatePost(req: Request, res: Response) {
 }
 
 export async function deletePost(req: Request, res: Response) {
-    const result = await Database.getDb().deleteOne({_id: req.body.id}).then(
+    const result = await getPostsCollection().deleteOne({_id: req.body.id}).then(
         (successResult) => {
             res.status(200).json({
                 "success": true,
@@ -64,7 +65,7 @@ export async function deletePost(req: Request, res: Response) {
 }
 
 export async function getPost(req: Request, res: Response) {
-    Database.getDb().findOne({_id: req.body.id}).then(
+    getPostsCollection().findOne({_id: req.body.id}).then(
         (successResult) => {
             res.status(200).json({
                 "success": true,
@@ -82,7 +83,7 @@ export async function getPost(req: Request, res: Response) {
 }
 
 export async function getAllPosts(req: Request, res: Response) {
-    const documents = await Database.getDb().find().toArray()
+    const documents = await getPostsCollection().find().toArray()
     if (documents) {
         res.status(200).json({
             "success": true,
@@ -102,7 +103,7 @@ export async function testConnection(req: Request, res: Response) {
 
     const options = {}
 
-    const cursor = await Database.getDb().find(query, options)
+    const cursor = await getPostsCollection().find(query, options)
 
     const data = await cursor.map(it => {
         return {
