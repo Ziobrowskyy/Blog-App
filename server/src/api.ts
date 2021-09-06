@@ -20,14 +20,6 @@ export function createPost(req: Request, res: Response) {
         })
 }
 
-export function createPostAndSaveFiles(req: Request, res: Response) {
-    console.log("body -> files")
-    console.log(req.body.files)
-    console.log("body")
-    console.log(req.body)
-    res.json({"message": "OK"})
-}
-
 export function updatePost(req: Request, res: Response) {
     const postId = req.body.id
     if (!req.body.params.id) {
