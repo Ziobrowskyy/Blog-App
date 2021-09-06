@@ -4,7 +4,6 @@ import React from "react";
 import {createBrowserHistory} from "history"
 import {Route, Router, Switch} from "react-router";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import PostsPage from "./components/PostsPage"
 import AdminPanel from "./components/AdminPanel";
 import About from "./components/About";

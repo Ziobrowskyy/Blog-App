@@ -3,15 +3,18 @@ import cors from "cors"
 import multer from "multer"
 import * as Database from "./database"
 import * as api from "./api"
-import path from "path";
+import path from "path"
+import dotenv from "dotenv"
 
 //express app and port to run at
 const app = express()
-const port = 8000
+
+dotenv.config()
+
+app.set("port", process.env.PORT || 3000)
 
 //routing static files (including images)
 app.use("/static", express.static("uploads"))
-
 //body parser use to handle request
 app.use(express.json())
 app.use(express.urlencoded())
@@ -30,7 +33,7 @@ const storage = multer.diskStorage({
 
 const imageUpload = multer({storage: storage}).array("files")
 
-app.use(express.static(path.join(__dirname, "../../blog-app/build")));
+// app.use(express.static(path.join(__dirname, "../../blog-app/build")));
 
 
 Database.init(err => {
@@ -45,13 +48,15 @@ app.get("/api/post/:id", api.getPost)
 app.get("/api/posts", api.getAllPosts)
 app.get("/api/", api.testConnection)
 
-// app.get("/*", (req, res) => {
-//     console.log("request on /*")
-//     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-// });
+app.get("/*", (req, res) => {
+    console.log("request on /*")
+    res.json({
+        "wiadomosc": "gituwa"
+    })
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
     console.log(__dirname)
-    // console.log(path.join(__dirname, "..", "..", "blog-app/build"))
-    console.log(`Server is running on port ${port}`)
+    console.log(`Server is running on port ${process.env.PORT}`)
 })

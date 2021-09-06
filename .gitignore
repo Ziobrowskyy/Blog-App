@@ -2,9 +2,13 @@
 **/node_modules
 yarn.lock
 
+.env
+
 #client folder specific
-/client/build
+/client/build/*
 
 #server folder specific
 /server/out/*
 /server/uploads/*
+
+*.log
