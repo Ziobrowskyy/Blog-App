@@ -25,16 +25,16 @@ export function createPost(req: Request, res: Response) {
 }
 
 export function updatePost(req: Request, res: Response) {
-    const postId = req.body.id
-    if (!req.body.params.id) {
+    const {id, content} = req.params
+    if (!id || !content) {
         res.status(400).json({
             "success": false,
             "message": "Missing body parameters"
         })
     }
     getPostsCollection().updateOne(
-        {_id: postId},
-        {}
+        {_id: id},
+        {content}
     ).then(
         (successResult) => {
             res.status(200).json({
@@ -51,7 +51,7 @@ export function updatePost(req: Request, res: Response) {
 }
 
 export async function deletePost(req: Request, res: Response) {
-    const result = await getPostsCollection().deleteOne({_id: req.body.id}).then(
+    const result = await getPostsCollection().deleteOne({_id: req.params.id}).then(
         (successResult) => {
             res.status(200).json({
                 "success": true,
@@ -68,7 +68,7 @@ export async function deletePost(req: Request, res: Response) {
 }
 
 export async function getPost(req: Request, res: Response) {
-    getPostsCollection().findOne({_id: req.body.id}).then(
+    getPostsCollection().findOne({_id: req.params.id}).then(
         (successResult) => {
             res.status(200).json({
                 "success": true,
