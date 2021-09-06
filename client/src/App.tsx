@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import React from "react";
+// @ts-ignore
 import {createBrowserHistory} from "history"
 import {Route, Router, Switch} from "react-router";
 import Header from "./components/Header";
