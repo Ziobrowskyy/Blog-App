@@ -4,9 +4,13 @@ import {Request, Response} from "express";
 import {getFilesCollection, getPostsCollection} from "./database";
 
 export function createPost(req: Request, res: Response) {
-    const post = new Post({...req.body, files: req.files})
+    let filenames: string[] = []
+    if (req.files instanceof Array)
+        filenames = req.files.map(el => el.filename ? el.filename : "")
 
-    Database.getDb().insertOne(post).then(
+    const post = new Post({...req.body, files: filenames})
+
+    getPostsCollection().insertOne(post).then(
         (successResult) => {
             res.status(200).json({
                 "success": true,
