@@ -27,7 +27,6 @@ class Header extends Component<MyProps, MyState> {
                 <Nav className={"mr-auto"}>
                     <Nav.Link as={Link} to={"/"}>Home</Nav.Link>
                     <Nav.Link as={Link} to={"/about"}>About</Nav.Link>
-                    <Nav.Link as={Link} to={"/posts"}>Posts</Nav.Link>
                     <Nav.Link as={Link} to={"/admin-panel"}>Admin panel</Nav.Link>
                 </Nav>
             </Navbar>

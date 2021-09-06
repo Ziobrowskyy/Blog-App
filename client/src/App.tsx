@@ -17,9 +17,8 @@ function App() {
                 <Container>
                 <Header/>
                 <Switch>
-                    <Route exact path={"/"}><p>Home page</p></Route>
+                    <Route exact path={"/"} component={PostsPage}/>
                     <Route path={"/about"} component={About}/>
-                    <Route path={"/posts"} component={PostsPage}/>
                     <Route path={"/admin-panel"} component={AdminPanel}/>
                     <Route path={"*"} component={PageNotFound}/>
                 </Switch>
