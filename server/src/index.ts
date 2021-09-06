@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 
 const imageUpload = multer({storage: storage}).array("files")
 
-// app.use(express.static(path.join(__dirname, "../../blog-app/build")));
+app.use(express.static(path.join(__dirname, "../../client/build")));
 
 
 Database.init(err => {
@@ -49,11 +49,7 @@ app.get("/api/posts", api.getAllPosts)
 app.get("/api/", api.testConnection)
 
 app.get("/*", (req, res) => {
-    console.log("request on /*")
-    res.json({
-        "wiadomosc": "gituwa"
-    })
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, "../../client/build/index.html"));
 });
 
 app.listen(process.env.PORT, () => {
