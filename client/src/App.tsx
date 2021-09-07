@@ -9,13 +9,14 @@ import PageNotFound from "./components/PageNotFound";
 import {Container} from "react-bootstrap";
 import "./styles/App.scss"
 import Login from "./components/Login";
-import {Redirect} from "react-router-dom";
+
+const history = createBrowserHistory()
 
 export default function App() {
     const [isLoggedIn, setLoggedIn] = useState(false)
     return (
         <div className="App">
-            <Router history={createBrowserHistory()}>
+            <Router history={history}>
                 <div className={"main-wrapper"}>
                     <Container className={"container-md"}>
                         <Header isLoggedIn={isLoggedIn}/>
@@ -23,6 +24,9 @@ export default function App() {
                             <Route exact path={"/"} component={PostsList}/>
                             <Route path={"/about"} component={About}/>
                             <Route path={"/admin-panel"} component={AdminPanel}/>
+                            <Route path={"/login"}>
+                                <Login onLogin={()=>setLoggedIn(true)}/>
+                            </Route>
                             <Route path={"*"} component={PageNotFound}/>
                         </Switch>
                     </Container>
