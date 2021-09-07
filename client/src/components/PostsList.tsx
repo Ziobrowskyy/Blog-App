@@ -11,18 +11,18 @@ enum Status {
     fail
 }
 
-interface State {
+interface IState {
     data: Array<PostData>;
     status: Status
 }
 
-export class PostsList extends Component<any, State> {
-    state: State = {
+export default class PostsList extends Component<any, IState> {
+    state: IState = {
         data: [],
         status: Status.loading
     }
 
-    public constructor(props : object) {
+    public constructor(props: object) {
         super(props);
         this.removePost = this.removePost.bind(this);
     }
@@ -43,36 +43,33 @@ export class PostsList extends Component<any, State> {
     }
 
     @HttpRequest
-    protected async removePost(id : string) {
+    protected async removePost(id: string) {
         const response = await Api.deletePostById(id);
 
         if (response.data.success) {
             const data = this.state.data.filter(data => data._id !== id);
-            this.setState({ data });
+            this.setState({data});
         }
     }
 
     renderByStatus() {
-
         const {status, data} = this.state
 
         switch (status) {
             case Status.success:
-                return data.map((data: PostData, i: number) => <Post key={i} data={data} onDelete={this.removePost} />)
+                return data.map((data: PostData, i: number) => <Post key={i} data={data} onDelete={this.removePost}/>)
             case Status.fail:
                 return <Alert>Data could not be loaded</Alert>
             default:
                 return <Alert>Page is loading</Alert>
         }
     }
-}
+
     render() {
         return (
             <Container className={"posts-wrapper"}>
-                { this.renderByStatus() }
+                {this.renderByStatus()}
             </Container>
         );
     }
 }
-
-export default PostsPage;
