@@ -57,8 +57,9 @@ Database.init(err => {
     throw(err)
 })
 
-if (process.env.FILE_SAVAE == "DATABASE")
+if (process.env.FILE_SAVAE == "DATABASE") {
     app.post("/api/post", gridFSImageUpload, API.createPost)
+}
 else
     app.post("/api/post", localImageUpload, API.createPost)
 

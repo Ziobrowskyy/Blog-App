@@ -32,14 +32,16 @@ export class Post extends Component<IProps> {
         return (
             <div className={"post"}>
                 <Card.Body>
-                    <h1>{data.title}</h1>
+                    <div className={"header-container"}>
+                        <h1 className={"post-title"}>{data.title}</h1>
+                        <div className={"button-wrapper"}>
+                            <CloseButton onClick={this.removePost}/>
+                        </div>
+                    </div>
                     <>{data.content}</>
                     {/*<Button variant="primary">Go somewhere</Button>*/}
                 </Card.Body>
                 {data.hasFiles && <div className={"img-wrapper"}><RenderImages images={data.files}/></div>}
-                <div className={"button-wrapper"}>
-                    <CloseButton onClick={this.removePost}/>
-                </div>
             </div>
         );
     }
