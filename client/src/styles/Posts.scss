@@ -1,0 +1,14 @@
+.post {
+  display: flex;
+  border: gray solid 1px;
+  border-radius: 5px;
+  padding: 10px;
+
+  .img-wrapper {
+    width: 40%;
+    img {
+      max-height: 400px;
+      max-width: 100%;
+    }
+  }
+}

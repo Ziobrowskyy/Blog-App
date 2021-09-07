@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import api from "../API";
+import {Apis} from "../API";
 import {Post} from "./Post";
-import {Alert, CardColumns} from "react-bootstrap";
-
+import {Alert, Container} from "react-bootstrap";
+import "../styles/PostsList.scss"
 
 enum Status {
     loading,
@@ -15,13 +15,13 @@ interface State {
     status: Status
 }
 
-export class PostsPage extends Component<any, State> {
+export class PostsList extends Component<any, State> {
     state: State = {
         data: undefined,
         status: Status.loading
     }
     componentDidMount = async () => {
-        await api.getAllPosts().then(result => {
+        await Apis.getAllPosts().then(result => {
             this.setState({
                 data: JSON.parse(result.data.data),
                 status: Status.success
@@ -38,11 +38,9 @@ export class PostsPage extends Component<any, State> {
     render() {
         const {status, data} = this.state
         return (
-            <>
-                <p>status: {status}</p>
-                <h1>List of all posts in the database</h1>
+            <Container className={"posts-wrapper"}>
                 {renderByStatus(status, data)}
-            </>
+            </Container>
         );
     }
 }
@@ -50,8 +48,7 @@ export class PostsPage extends Component<any, State> {
 function renderByStatus(status: Status, data: any) {
     switch (status) {
         case Status.success:
-            const posts = data?.map((data: any, i: any) => <Post data={data} key={i}/>)
-            return <CardColumns>{posts}</CardColumns>
+            return data?.map((data: any, i: number) => <Post data={data} key={i}/>)
         case Status.fail:
             return <Alert>Data could not be loaded</Alert>
         default:
@@ -59,6 +56,6 @@ function renderByStatus(status: Status, data: any) {
     }
 }
 
-export default PostsPage;
+export default PostsList;
 
 

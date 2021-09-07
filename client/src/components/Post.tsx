@@ -1,12 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component} from "react";
 import {Button, Card, Carousel} from "react-bootstrap";
+import "../styles/Posts.scss"
 
 interface IProps {
     data: Data
 }
 
+
 interface Data {
-    id: string;
+    _id: string;
     hasContent: boolean;
     hasFiles: boolean;
     title: string;
@@ -20,14 +22,14 @@ export class Post extends Component<IProps> {
         const {data} = this.props
         console.log(data)
         return (
-            <Card style={{width: '18rem'}}>
-                {data.hasFiles && <RenderImages images={data.files}/>}
+            <div className={"post"}>
                 <Card.Body>
                     <Card.Title>{data.title}</Card.Title>
                     <Card.Text>{data.content}</Card.Text>
                     <Button variant="primary">Go somewhere</Button>
                 </Card.Body>
-            </Card>
+                {data.hasFiles && <div className={"img-wrapper"}><RenderImages images={data.files}/></div>}
+            </div>
         );
     }
 }
@@ -36,10 +38,10 @@ function RenderImages(props: { images: Array<URL> }) {
     const {images} = props
 
     if (images.length === 1)
-        return <Card.Img variant="top" src={`static/${images[0].toString()}`}/>
+        return <img src={`static/${images[0].toString()}`}/>
 
     const items = images.map((el, i) =>
-        <Carousel.Item key={i.toString()}>
+        <Carousel.Item key={i}>
             <img
                 className={"d-block w-100"}
                 src={`static/${el.toString()}`}
