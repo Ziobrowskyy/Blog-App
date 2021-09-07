@@ -2,8 +2,8 @@ import express from "express"
 import cors from "cors"
 import multer from "multer"
 import {GridFsStorage} from "multer-gridfs-storage"
-import * as Database from "./database"
-import * as api from "./api"
+import * as Database from "./Database"
+import {API} from "./API"
 import path from "path"
 import dotenv from "dotenv";
 import ExpressWs from "express-ws";
@@ -17,12 +17,13 @@ dotenv.config()
 app.set("port", process.env.PORT || 3000)
 
 //routing static files (including images)
-if (process.env.ENV != "Heroku" && false)
+if (process.env.FILE_SAVE == "LOCAL")
     app.use("/static", express.static("uploads"))
 //body parser use to handle request
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(cors())
+app.use(express.static(path.join(__dirname, "../../client/build")));
 
 //file save handling locally
 const localStorage = multer.diskStorage({
@@ -51,25 +52,25 @@ const gridFSStorage = new GridFsStorage({
 const localImageUpload = multer({storage: localStorage}).array("files")
 const gridFSImageUpload = multer({storage: gridFSStorage}).array("files")
 
-app.use(express.static(path.join(__dirname, "../../client/build")));
-
 Database.init(err => {
     console.warn("Failed to connect to database!")
     throw(err)
 })
 
-if (process.env.ENV == "Heroku" || true)
-    app.post("/api/post", gridFSImageUpload, api.createPost)
+if (process.env.FILE_SAVAE == "DATABASE")
+    app.post("/api/post", gridFSImageUpload, API.createPost)
 else
-    app.post("/api/post", localImageUpload, api.createPost)
-app.put("/api/post/:id", api.updatePost)
-app.delete("/api/post/:id", api.deletePost)
-app.get("/api/post/:id", api.getPost)
-app.get("/api/posts", api.getAllPosts)
-app.get("/api/", api.testConnection)
+    app.post("/api/post", localImageUpload, API.createPost)
 
-if (process.env.ENV == "Heroku" || true)
-    app.all("/static/:filename", api.getFile)
+app.put("/api/post/:id", API.updatePost)
+app.delete("/api/post/:id", API.deletePost)
+app.get("/api/post/:id", API.getPost)
+app.get("/api/posts", API.getAllPosts)
+
+app.post("/api/login", API.login)
+
+if (process.env.FILE_SAVE == "DATABASE")
+    app.post("/static/:filename", API.getFile)
 
 app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "../../client/build/index.html"));

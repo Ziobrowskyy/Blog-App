@@ -8,6 +8,8 @@ import About from "./components/About";
 import PageNotFound from "./components/PageNotFound";
 import {Container} from "react-bootstrap";
 import "./styles/App.scss"
+import Login from "./components/Login";
+import {Redirect} from "react-router-dom";
 
 export default function App() {
     const [isLoggedIn, setLoggedIn] = useState(false)
