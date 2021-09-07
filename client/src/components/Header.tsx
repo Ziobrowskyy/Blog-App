@@ -1,6 +1,10 @@
 import {Component} from "react";
 import {Link} from "react-router-dom"
-import {Navbar, Nav} from "react-bootstrap";
+import logoImg from "../assets/images/logo.png"
+import fbLogoImg from "../assets/images/fb-logo.png"
+import igLogoImg from "../assets/images/ig-logo.png"
+import "../styles/Header.scss"
+
 
 interface IProps {
     isLoggedIn: boolean
@@ -27,17 +31,21 @@ export default class Header extends Component<IProps, IState> {
     render() {
         const {isLoggedIn} = this.props
         return (
-            <Navbar>
-                <Navbar.Brand>Logo</Navbar.Brand>
-                <Nav className={"mr-auto"}>
-                    <Nav.Link as={Link} to={"/"}>Home</Nav.Link>
-                    <Nav.Link as={Link} to={"/about"}>About</Nav.Link>
+            <div className={"header-left"}>
+                <div className={"nav-brand"}>
+                    <img src={logoImg}/>
+                    <span className={"name"}>Company name</span>
+                </div>
+                <hr/>
+                <div className={"navbar"}>
+                    <Link to={"/"}>Home</Link>
+                    <Link to={"/about"}>About</Link>
                     {isLoggedIn ?
-                        <Nav.Link as={Link} to={"/admin-panel"}>Admin panel</Nav.Link> :
-                        <Nav.Link as={Link} to={"/login"}>Login</Nav.Link>
+                        <Link to={"/admin-panel"}>Admin panel</Link> :
+                        <Link to={"/login"}>Login</Link>
                     }
-                </Nav>
-            </Navbar>
+                </div>
+            </div>
         )
     }
 }

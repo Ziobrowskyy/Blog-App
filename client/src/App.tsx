@@ -18,14 +18,14 @@ export default function App() {
         <div className="App">
             <Router history={history}>
                 <div className={"main-wrapper"}>
+                    <Header isLoggedIn={isLoggedIn}/>
                     <Container className={"container-md"}>
-                        <Header isLoggedIn={isLoggedIn}/>
                         <Switch>
                             <Route exact path={"/"} component={PostsList}/>
                             <Route path={"/about"} component={About}/>
                             <Route path={"/admin-panel"} component={AdminPanel}/>
                             <Route path={"/login"}>
-                                <Login onLogin={()=>setLoggedIn(true)}/>
+                                <Login onLogin={() => setLoggedIn(true)}/>
                             </Route>
                             <Route path={"*"} component={PageNotFound}/>
                         </Switch>
