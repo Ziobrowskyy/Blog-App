@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Button, Card, Carousel, CloseButton} from "react-bootstrap";
+import {Card, Carousel, CloseButton} from "react-bootstrap";
 import "../styles/Posts.scss"
 
 interface IProps {
     data: PostData
-    onDelete : (id : string) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
 }
 
 export interface PostData {
@@ -18,12 +18,12 @@ export interface PostData {
 
 export class Post extends Component<IProps> {
 
-    public constructor(props : IProps) {
+    public constructor(props: IProps) {
         super(props);
         this.removePost = this.removePost.bind(this);
     }
 
-    protected removePost() : void {
+    protected removePost(): void {
         this.props.onDelete(this.props.data._id);
     }
 
@@ -32,12 +32,14 @@ export class Post extends Component<IProps> {
         return (
             <div className={"post"}>
                 <Card.Body>
-                    <Card.Title>{data.title}</Card.Title>
-                    <CloseButton onClick={this.removePost} />
-                    <Card.Text>{data.content}</Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    <h1>{data.title}</h1>
+                    <>{data.content}</>
+                    {/*<Button variant="primary">Go somewhere</Button>*/}
                 </Card.Body>
                 {data.hasFiles && <div className={"img-wrapper"}><RenderImages images={data.files}/></div>}
+                <div className={"button-wrapper"}>
+                    <CloseButton onClick={this.removePost}/>
+                </div>
             </div>
         );
     }
