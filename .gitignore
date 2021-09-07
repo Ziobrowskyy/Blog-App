@@ -10,6 +10,5 @@ yarn.lock
 
 #server folder specific
 /server/out/*
-/server/uploads/*
 
 *.log
