@@ -1,4 +1,4 @@
-import express from "express"
+import express, {Request, Response} from "express"
 import cors from "cors"
 import multer from "multer"
 import {GridFsStorage} from "multer-gridfs-storage"
@@ -70,13 +70,12 @@ app.get("/api/posts", API.getAllPosts)
 app.post("/api/login", API.login)
 
 if (process.env.FILE_SAVE == "DATABASE")
-    app.post("/static/:filename", API.getFile)
+    app.get("/static/:filename", API.getFile)
 
-app.get("/*", (req, res) => {
+app.get("/*", (req: Request, res:Response) => {
     res.sendFile(path.join(__dirname, "../../client/build/index.html"));
 });
 
 app.listen(process.env.PORT, () => {
-    console.log(__dirname)
     console.log(`Server is running on port ${process.env.PORT}`)
 });
