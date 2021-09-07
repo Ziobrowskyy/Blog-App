@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build and watch": "tsc -w",
-    "postinstall": "tsc && npm install --only=dev --prefix ./client && npm install --prefix ./client && npm run build client",
+    "postinstall": "tsc && npm install --only=dev --prefix ./client && npm install --prefix ./client && npm run \"build client\"",
     "start": "node server/out/index.js",
     "start client": "npm run start --prefix ./client",
     "build client": "npm run build --prefix ./client"
