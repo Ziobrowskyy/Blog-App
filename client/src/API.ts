@@ -1,27 +1,28 @@
 import axios, {AxiosResponse} from "axios";
+import NetResponse from "./data/NetResponse";
 
-const API = axios.create({
+const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL || "/api",
 });
 
 interface IApi {
-    checkConnection: () => Promise<AxiosResponse<any>>;
-    deletePostById: (id: any) => Promise<AxiosResponse<any>>;
-    getPostById: (id: any) => Promise<AxiosResponse<any>>;
-    getAllPosts: () => Promise<AxiosResponse<any>>;
-    insertPost: (data: FormData) => Promise<AxiosResponse<any>>;
-    updatePostById: (id: any, data: any) => Promise<AxiosResponse<any>>
+    checkConnection: () => Promise<AxiosResponse<NetResponse>>;
+    deletePostById: (id: any) => Promise<AxiosResponse<NetResponse>>;
+    getPostById: (id: any) => Promise<AxiosResponse<NetResponse>>;
+    getAllPosts: () => Promise<AxiosResponse<NetResponse>>;
+    insertPost: (data: FormData) => Promise<AxiosResponse<NetResponse>>;
+    updatePostById: (id: any, data: any) => Promise<AxiosResponse<NetResponse>>
 }
 
-export const Apis: IApi = {
-    insertPost: (data) => API.post("/post", data, {
+export const Api: IApi = {
+    insertPost: data => api.post("/post", data, {
         headers: {'content-type': 'multipart/form-data'}
     }),
-    getPostById: (id) => API.get("/posts" + id),
-    getAllPosts: () => API.get("/posts"),
-    updatePostById: (id, data) => API.put("/post/" + id, data, {
+    getPostById: id => api.get("/posts" + id),
+    getAllPosts: () => api.get("/posts"),
+    updatePostById: (id, data) => api.put("/post/" + id, data, {
         headers: {'content-type': 'multipart/form-data'}
     }),
-    deletePostById: (id) => API.delete("/post/" + id),
-    checkConnection: () => API.get("/")
+    deletePostById: id => api.delete("/post/" + id),
+    checkConnection: () => api.get("/")
 };

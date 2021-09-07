@@ -1,7 +1,8 @@
 import React, {Component} from "react";
-import {Apis} from "../API";
-import {Post} from "./Post";
+import {Api} from "../API";
+import {Post, PostData} from "./Post";
 import {Alert, Container} from "react-bootstrap";
+import HttpRequest from "../decorators/HttpRequest";
 import "../styles/PostsList.scss"
 
 enum Status {
@@ -11,51 +12,67 @@ enum Status {
 }
 
 interface State {
-    data: any;
+    data: Array<PostData>;
     status: Status
 }
 
 export class PostsList extends Component<any, State> {
     state: State = {
-        data: undefined,
+        data: [],
         status: Status.loading
     }
+
+    public constructor(props : object) {
+        super(props);
+        this.removePost = this.removePost.bind(this);
+    }
+
     componentDidMount = async () => {
-        await Apis.getAllPosts().then(result => {
+        await Api.getAllPosts().then(result => {
             this.setState({
                 data: JSON.parse(result.data.data),
                 status: Status.success
             })
         }).catch(errorMessage => {
             this.setState({
-                data: JSON.stringify(errorMessage),
+                //data: JSON.stringify(errorMessage),
                 status: Status.fail
             })
         })
 
     }
 
-    render() {
+    @HttpRequest
+    protected async removePost(id : string) {
+        const response = await Api.deletePostById(id);
+
+        if (response.data.success) {
+            const data = this.state.data.filter(data => data._id !== id);
+            this.setState({ data });
+        }
+    }
+
+    renderByStatus() {
+
         const {status, data} = this.state
+
+        switch (status) {
+            case Status.success:
+                return data.map((data: PostData, i: number) => <Post key={i} data={data} onDelete={this.removePost} />)
+            case Status.fail:
+                return <Alert>Data could not be loaded</Alert>
+            default:
+                return <Alert>Page is loading</Alert>
+        }
+    }
+}
+    render() {
         return (
             <Container className={"posts-wrapper"}>
-                {renderByStatus(status, data)}
+                { this.renderByStatus() }
             </Container>
         );
     }
 }
 
-function renderByStatus(status: Status, data: any) {
-    switch (status) {
-        case Status.success:
-            return data?.map((data: any, i: number) => <Post data={data} key={i}/>)
-        case Status.fail:
-            return <Alert>Data could not be loaded</Alert>
-        default:
-            return <Alert>Page is loading</Alert>
-    }
-}
-
-export default PostsList;
-
-
+export default PostsPage;

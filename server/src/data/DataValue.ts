@@ -1,0 +1,1 @@
+export type DataValue<Data> = boolean | string | object | Function | Data | symbol | undefined;
