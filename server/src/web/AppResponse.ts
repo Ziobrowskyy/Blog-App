@@ -3,6 +3,15 @@ import Data from "../data/Data";
 import { DataValue } from "../data/DataValue";
 import { HttpStatus } from "../data/HttpStatus";
 import { STRING } from "../data/String";
+import DataModel from "./DataModel";
+
+interface ModelLoadSuccess {
+    (send : AppResponse) : void;
+}
+
+interface ModelLoadError {
+    (send : AppResponse) : void;
+}
 
 export default class AppResponse {
 
@@ -53,6 +62,14 @@ export default class AppResponse {
         return this;
 
     }
+
+    public load(model : DataModel, onLoad : ModelLoadSuccess, onError : ModelLoadError) : AppResponse {
+
+        model.status ? onLoad(this) : onError(this);
+
+        return this;
+
+    } 
 
     public json() : void {
 

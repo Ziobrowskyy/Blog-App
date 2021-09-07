@@ -20,7 +20,11 @@
     }
   }
 
-  .button-wrapper {
-    display: none;
+  .header-container {
+    display: flex;
+    .post-title {
+      flex: 1;
+    }
   }
+
 }

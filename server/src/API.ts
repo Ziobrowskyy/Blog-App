@@ -5,18 +5,19 @@ import AppResponse from "./web/AppResponse";
 import {ObjectID} from "mongodb";
 
 export namespace API {
-    export function createPost(req: Request, res: Response) {
-        let filenames: string[] = []
+    export async function createPost(req: Request, res: Response) {
+        const files: string[] = [];
 
         if (req.files instanceof Array)
-            filenames = req.files.map(el => el.filename ? el.filename : "")
+            files.push(...req.files.map(el => el.filename || ""));
 
-        const post = new Post({...req.body, files: filenames})
 
-        getPostsCollection().insertOne(post).then(
-            successResult => new AppResponse(res).success().json(),
-            failMessage => new AppResponse(res).error(`Failed to add data to database. ${failMessage}`).json()
-        )
+        const post = await new Post({...req.body, files}).createPost();
+
+        return new AppResponse(res).load(post,
+            send => send.success(),
+            send => send.error(`Failed to add data to database. ${post.errorMessage}`)
+        ).json();
 
     }
 
@@ -24,7 +25,7 @@ export namespace API {
         const {id, content} = req.params
 
         if (!id || !content) {
-            new AppResponse(res).error("Missing body parameters").json()
+            return new AppResponse(res).error("Missing body parameters").json()
         }
 
         getPostsCollection().updateOne({_id: id}, {content}).then(
@@ -44,10 +45,12 @@ export namespace API {
 
     export async function getPost(req: Request, res: Response) {
 
-        getPostsCollection().findOne({_id: req.params.id}).then(
-            successResult => new AppResponse(res).success(successResult).json(),
-            failMessage => new AppResponse(res).error(`Failed to find document. ${failMessage}`).json()
-        )
+        const post = await new Post({ _id: req.params.id, ...req.body }).getPost();
+
+        return new AppResponse(res).load(post,
+            send => send.success(post.dataResult),
+            send => send.error(`Failed to find document. ${post.errorMessage}`)
+        );
     }
 
     export async function getAllPosts(req: Request, res: Response) {
