@@ -1,9 +1,7 @@
 import axios, {AxiosResponse} from "axios";
 
-
 const API = axios.create({
-    // baseURL: "http://192.168.0.52:8000/api",
-    baseURL: process.env.REACT_APP_API_URL,
+    baseURL: process.env.REACT_APP_API_URL || "/api",
 });
 
 interface IApi {
@@ -15,7 +13,7 @@ interface IApi {
     updatePostById: (id: any, data: any) => Promise<AxiosResponse<any>>
 }
 
-const Apis: IApi = {
+export const Apis: IApi = {
     insertPost: (data) => API.post("/post", data, {
         headers: {'content-type': 'multipart/form-data'}
     }),
@@ -27,4 +25,3 @@ const Apis: IApi = {
     deletePostById: (id) => API.delete("/post/" + id),
     checkConnection: () => API.get("/")
 };
-export default Apis;
