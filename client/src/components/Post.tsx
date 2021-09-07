@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Card, Carousel, CloseButton} from "react-bootstrap";
-import "../styles/Posts.scss"
+import "../styles/Post.scss"
 
 interface IProps {
     data: PostData
@@ -54,7 +54,6 @@ function RenderImages(props: { images: Array<URL> }) {
     const items = images.map((el, i) =>
         <Carousel.Item key={i}>
             <img
-                className={"d-block w-100"}
                 src={`static/${el.toString()}`}
             />
         </Carousel.Item>
