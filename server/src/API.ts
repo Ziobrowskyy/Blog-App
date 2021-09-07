@@ -66,12 +66,8 @@ export namespace API {
 
         if (files.length == 0)
             new AppResponse(res).error("Failed to find file").json()
-
-        try {
+        else
             getFilesCollection().openDownloadStreamByName(filename).pipe(res)
-        } catch (e) {
-            new AppResponse(res).error(`Failed to find file. ${e.message}`)
-        }
     }
 
     export async function login(req: Request, res: Response) {
