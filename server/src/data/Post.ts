@@ -1,6 +1,6 @@
-import { getPostsCollection } from "../Database"
-import { PostAction } from "../mediators/Post"
-import Mediator, { BodyType } from "../web/Mediator"
+import {getPostsCollection} from "../Database"
+import {PostAction} from "../mediators/Post"
+import Mediator, {BodyType} from "../web/Mediator"
 
 export interface PostBodyType extends BodyType {
     title: string
@@ -15,7 +15,7 @@ class Post extends Mediator implements PostAction {
     hasContent: boolean
     hasFiles: boolean
 
-    constructor({ _id, title, content, files } : PostBodyType) {
+    constructor({_id, title, content, files}: PostBodyType) {
         super(_id);
         this.title = title;
         this.content = content;
@@ -24,20 +24,22 @@ class Post extends Mediator implements PostAction {
         this.hasFiles = this.files.length > 0
     }
 
-    public createPost() : Promise<Post> {
+    public createPost(): Promise<Post> {
+        const {title, content, files, hasContent, hasFiles} = this;
 
-        const { title, content, files, hasContent, hasFiles } = this;
-
-        return new Promise(Fetch => getPostsCollection().insertOne({title,content,files,hasContent,hasFiles}).then( this.result(Fetch), this.error(Fetch) ));
-
+        return new Promise(Fetch => getPostsCollection().insertOne({
+            title,
+            content,
+            files,
+            hasContent,
+            hasFiles
+        }).then(this.result(Fetch), this.error(Fetch)));
     }
 
-    public getPost() : Promise<Post> {
+    public getPost(): Promise<Post> {
+        const {_id} = this;
 
-        const { _id } = this;
-
-        return new Promise(Fetch => getPostsCollection().findOne({_id}).then( this.result(Fetch), this.error(Fetch) ));
-
+        return new Promise(Fetch => getPostsCollection().findOne({_id}).then(this.result(Fetch), this.error(Fetch)));
     }
 }
 

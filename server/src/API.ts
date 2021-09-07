@@ -44,8 +44,7 @@ export namespace API {
     }
 
     export async function getPost(req: Request, res: Response) {
-
-        const post = await new Post({ _id: req.params.id, ...req.body }).getPost();
+        const post = await new Post({_id: req.params.id, ...req.body}).getPost();
 
         return new AppResponse(res).load(post,
             send => send.success(post.dataResult),
