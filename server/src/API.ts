@@ -74,4 +74,19 @@ export namespace API {
         }
     }
 
+    export async function login(req: Request, res: Response) {
+        const {login, password} = req.body
+
+        if (!login || !password)
+            new AppResponse(res).error("Login and password is required!").json()
+
+        const user = await getUsersCollection().findOne({username: login})
+        console.log(user)
+        // if (!user) {
+        //     new AppResponse(res).error("Cannot find user in database").json()
+        // }
+
+
+        new AppResponse(res).success("OK").json()
+    }
 }
