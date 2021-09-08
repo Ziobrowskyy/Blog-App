@@ -45,6 +45,10 @@ export default class Header extends Component<IProps, IState> {
                         <Link to={"/login"}>Login</Link>
                     }
                 </div>
+                <div className={"media-links"}>
+                    <a href={"https://facebook.com"}><img src={fbLogoImg}/></a>
+                    <a href={"https://instagram.com"}><img src={igLogoImg}/></a>
+                </div>
             </div>
         )
     }
