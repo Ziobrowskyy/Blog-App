@@ -19,7 +19,7 @@ export default function App() {
             <Router history={history}>
                 <div className={"main-wrapper"}>
                     <Header isLoggedIn={isLoggedIn}/>
-                    <Container className={"container-md"}>
+                    <Container className={"content-wrapper container-md"}>
                         <Switch>
                             <Route exact path={"/"} component={PostsList}/>
                             <Route path={"/about"} component={About}/>
