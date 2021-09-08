@@ -33,7 +33,7 @@ export default class Header extends Component<IProps, IState> {
         return (
             <div className={"header-left"}>
                 <div className={"nav-brand"}>
-                    <img src={logoImg}/>
+                    <img src={logoImg} alt={"brand logo"}/>
                     <span className={"name"}>Company name</span>
                 </div>
                 <hr/>
@@ -45,9 +45,14 @@ export default class Header extends Component<IProps, IState> {
                         <Link to={"/login"}>Login</Link>
                     }
                 </div>
-                <div className={"media-links"}>
-                    <a href={"https://facebook.com"}><img src={fbLogoImg}/></a>
-                    <a href={"https://instagram.com"}><img src={igLogoImg}/></a>
+                <hr/>
+
+                <div className={"media-wrapper"}>
+                    <span>Find us on:</span>
+                    <div className={"media-links"}>
+                        <a href={"https://facebook.com"}><img src={fbLogoImg} alt={"Facebook logo"}/></a>
+                        <a href={"https://instagram.com"}><img src={igLogoImg} alt={"Instagram logo"}/></a>
+                    </div>
                 </div>
             </div>
         )

@@ -17,14 +17,13 @@ code {
   monospace;
 }
 
-.main-wrapper {
-  width: 100%;
-  height: 100%;
+#root {
   display: grid;
   grid-template-columns: 400px 1fr;
-  background-color: #F1F1F1;
-
   .content-wrapper {
+    display: flex;
+    justify-content: center;
+    background-color: #F1F1F1;
     grid-column: 2/3;
     padding-top: 40px;
   }
