@@ -19,6 +19,10 @@
     justify-content: space-evenly;
     gap: 20px;
 
+    img {
+      max-height: 250px;
+    }
+
     .name {
       word-wrap: break-word;
       font-weight: bold;
@@ -53,9 +57,8 @@
   }
 
   .media-wrapper {
-    height: 100%;
-
     display: flex;
+    margin-top: auto;
     justify-content: flex-end;
     flex-direction: column;
     gap: 20px;
