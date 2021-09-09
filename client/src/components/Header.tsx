@@ -34,7 +34,7 @@ export default class Header extends Component<IProps, IState> {
             <div className={"header-left"}>
                 <div className={"nav-brand"}>
                     <img src={logoImg} alt={"brand logo"}/>
-                    <span className={"name"}>Company name</span>
+                    {/*<span className={"name"}>Company name</span>*/}
                 </div>
                 <hr/>
                 <div className={"navbar"}>
