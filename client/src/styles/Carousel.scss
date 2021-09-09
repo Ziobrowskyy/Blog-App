@@ -1,0 +1,52 @@
+.fade-appear {
+  opacity: 0;
+}
+
+.fade-appear.fade-appear-active {
+  opacity: 1;
+  transition: opacity 1000ms linear;
+}
+
+.carousel {
+  height: 400px;
+  width: 400px;
+  overflow: hidden;
+  position: relative;
+
+  > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    grid-row: 1/2;
+  }
+
+  .controls {
+
+    .arrows {
+      user-select: none;
+      top: 50%;
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      img {
+        opacity: 0.5;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .indicators {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%);
+      img {
+        margin: 0 2px;
+      }
+    }
+  }
+}
