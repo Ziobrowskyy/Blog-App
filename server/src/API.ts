@@ -3,8 +3,15 @@ import {Request, Response} from "express";
 import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Database";
 import AppResponse from "./web/AppResponse";
 import {ObjectID} from "mongodb";
+import {Readable} from "stream";
+
+interface ICacheMap {
+    [key: string]: Readable
+}
 
 export namespace API {
+    const imageCache: ICacheMap = {}
+
     export async function createPost(req: Request, res: Response) {
         const files: string[] = [];
 
@@ -68,8 +75,28 @@ export namespace API {
 
         if (files.length == 0)
             new AppResponse(res).error("Failed to find file").json()
-        else
-            getFilesCollection().openDownloadStreamByName(filename).pipe(res)
+        else {
+            let stream: Readable
+            const readable = new Readable()
+
+            if (imageCache.hasOwnProperty(filename))
+                stream = imageCache[filename]
+            else
+                stream = getFilesCollection().openDownloadStreamByName(filename)
+
+            res.header("transfer-encoding", "chunked");
+
+            stream.on("data", (chunk) => {
+                readable.push(chunk)
+                res.write(chunk)
+            })
+
+            stream.on("end", () => {
+                readable.push(null)
+                imageCache[filename] = readable
+                res.end()
+            })
+        }
     }
 
     export async function login(req: Request, res: Response) {
