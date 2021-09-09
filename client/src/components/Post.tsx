@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Card, Carousel, CloseButton} from "react-bootstrap";
+import {Card, CloseButton} from "react-bootstrap";
 import "../styles/Post.scss"
+import Carousel from "./Carousel"
 
 interface IProps {
     data: PostData
@@ -41,26 +42,13 @@ export class Post extends Component<IProps> {
                     <>{data.content}</>
                     {/*<Button variant="primary">Go somewhere</Button>*/}
                 </Card.Body>
-                {data.hasFiles && <div className={"img-wrapper"}><RenderImages images={data.files}/></div>}
+                {data.hasFiles &&
+                <Carousel>
+                    {data.files.map(el => <img src={`static/${el}`} alt={el.toString()}/>)}
+                </Carousel>}
             </div>
-        );
+        )
     }
 }
 
-function RenderImages(props: { images: Array<URL> }) {
-    const {images} = props
-
-    if (images.length === 1)
-        return <img src={`static/${images[0].toString()}`}/>
-
-    const items = images.map((el, i) =>
-        <Carousel.Item key={i}>
-            <img
-                src={`static/${el.toString()}`}
-            />
-        </Carousel.Item>
-    )
-
-    return <Carousel>{items}</Carousel>
-}
 
