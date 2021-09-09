@@ -27,8 +27,8 @@ export default class PostsList extends Component<any, IState> {
         this.removePost = this.removePost.bind(this);
     }
 
-    componentDidMount = async () => {
-        await Api.getAllPosts().then(result => {
+    componentDidMount = () => {
+        Api.getAllPosts().then(result => {
             this.setState({
                 data: JSON.parse(result.data.data),
                 status: Status.success

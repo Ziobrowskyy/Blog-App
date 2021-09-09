@@ -1,18 +1,17 @@
-import Post from "./data/Post";
 import {Request, Response} from "express";
-import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Database";
-import AppResponse from "./web/AppResponse";
 import {ObjectID} from "mongodb";
+import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Database";
+import Post from "./data/Post";
+import AppResponse from "./web/AppResponse";
 
 export namespace API {
     export async function createPost(req: Request, res: Response) {
-        const files: string[] = [];
+        const files: string[] = [], {title,content} = req.params;
 
         if (req.files instanceof Array)
             files.push(...req.files.map(el => el.filename || ""));
 
-
-        const post = await new Post({...req.body, files}).createPost();
+        const post = await new Post({title,content,files}).createPost();
 
         return new AppResponse(res).load(post,
             send => send.success(),
@@ -44,22 +43,21 @@ export namespace API {
     }
 
     export async function getPost(req: Request, res: Response) {
-        const post = await new Post({_id: req.params.id, ...req.body}).getPost();
+        const post = await new Post({_id: req.params.id}).getPost();
 
         return new AppResponse(res).load(post,
-            send => send.success(post.dataResult),
+            send => send.success().with(post.dataResult),
             send => send.error(`Failed to find document. ${post.errorMessage}`)
-        );
+        ).json();
     }
 
     export async function getAllPosts(req: Request, res: Response) {
-        const documents = await getPostsCollection().find().toArray()
+        const posts = await new Post().fetchAll();
 
-        if (documents) {
-            new AppResponse(res).success().with(documents).json();
-        } else {
-            new AppResponse(res).error("Failed to find documents").json();
-        }
+        return new AppResponse(res).load(posts,
+            send => send.success().with(posts.dataResult),
+            send => send.error("Failed to find documents")
+        ).json();
     }
 
     export async function getFile(req: Request, res: Response) {

@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build and watch": "tsc -w",
-    "postinstall": "tsc && npm install --only=dev --prefix ./client && npm install --prefix ./client && npm run build --prefix ./client",
-    "start": "node server/out/index.js",
+    "build": "tsc -w",
+    "start": "nodemon server/out/index.js",
     "client start": "npm run start --prefix ./client",
     "client build": "npm run build --prefix ./client"
   },
@@ -15,15 +14,18 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bson": "^4.2.0",
+    "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.1",
     "@types/mongodb": "^3.6.6",
     "@types/multer": "^1.4.5",
     "@types/node": "^14.14.25",
+    "nodemon": "^2.0.12",
     "typescript": "^4.1.3"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

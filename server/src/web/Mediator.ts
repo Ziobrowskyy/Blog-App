@@ -1,9 +1,10 @@
+import { Property } from "../data/types/Property";
 import DataModel from "./DataModel";
 
 type Fetch = (value: any | PromiseLike<any>) => void;
 
 export interface BodyType {
-    _id : string;
+    _id : Property<string>;
 }
 
 export default class Mediator<DataType = any> implements DataModel<DataType>, BodyType {
@@ -14,9 +15,9 @@ export default class Mediator<DataType = any> implements DataModel<DataType>, Bo
 
     errorMessage : string | null;
 
-    _id : string;
+    _id : Property<string>;
 
-    public constructor(_id : string) {
+    public constructor(_id : Property<string>) {
 
         this._id = _id;
 

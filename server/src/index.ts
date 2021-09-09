@@ -7,6 +7,8 @@ import {API} from "./API"
 import path from "path"
 import dotenv from "dotenv";
 import ExpressWs from "express-ws";
+import cookieParser from "cookie-parser";
+import User from "./auth/UserAuth"
 
 //express app and port to run at
 const app = express()
@@ -23,6 +25,7 @@ if (process.env.FILE_SAVE == "LOCAL")
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(cors())
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../../client/build")));
 
 //file save handling locally
@@ -65,7 +68,7 @@ else
 app.put("/api/post/:id", API.updatePost)
 app.delete("/api/post/:id", API.deletePost)
 app.get("/api/post/:id", API.getPost)
-app.get("/api/posts", API.getAllPosts)
+app.get("/api/posts", User.auth, API.getAllPosts)
 
 app.post("/api/login", API.login)
 
