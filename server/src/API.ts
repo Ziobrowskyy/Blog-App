@@ -4,6 +4,7 @@ import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Data
 import AppResponse from "./web/AppResponse";
 import {ObjectID} from "mongodb";
 import {Readable} from "stream";
+import User from "./data/User";
 
 interface ICacheMap {
     [key: string]: Readable
@@ -100,18 +101,48 @@ export namespace API {
     }
 
     export async function login(req: Request, res: Response) {
-        const {login, password} = req.body
+        const {username, password} = req.body
+        const response = new AppResponse(res)
+        const collection = getUsersCollection()
 
-        if (!login || !password)
-            new AppResponse(res).error("Login and password is required!").json()
+        if (!username || !password) {
+            response.error("Login and password is required!").json()
+            return
+        }
 
-        const user = await getUsersCollection().findOne({username: login})
-        console.log(user)
-        // if (!user) {
-        //     new AppResponse(res).error("Cannot find user in database").json()
-        // }
+        const user = new User({username, password})
 
+        if(!await user.findInDb(collection)) {
+            new AppResponse(res).error("User does not exist").json()
+            return
+        }
 
-        new AppResponse(res).success("OK").json()
+        if(await new User({username,password}).login(collection))
+            response.success("OK").json()
+        else
+            response.error("Cannot validate user with given password").json()
+
+    }
+
+    export async function register(req: Request, res: Response) {
+        const {username, password} = req.body
+        const collection = getUsersCollection()
+
+        if(!username || !password) {
+            new AppResponse(res).error("need username and password").json()
+            return
+        }
+
+        const user = new User({username,password})
+
+        //check if user exists in db
+        if(await user.findInDb(collection)) {
+            new AppResponse(res).error("User exists in database").json()
+            return
+        }
+
+        const id = await user.register(collection)
+
+        new AppResponse(res).success(`User registration success! User id: ${id}`).json()
     }
 }
