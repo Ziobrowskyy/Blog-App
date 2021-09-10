@@ -1,6 +1,10 @@
 import React, {ChangeEvent, Component, FormEvent} from "react";
-import {Button, Form} from "react-bootstrap";
 import {Api} from "../API";
+import Form from "./Form";
+import FormField from "./FormField";
+import FormButton from "./FormButton";
+import FormHeader from "./FormHeader";
+import "../styles/AdminPanel.scss"
 
 interface IState {
     title: string;
@@ -36,37 +40,25 @@ class AdminPanel extends Component<any, IState> {
 
     render() {
         return (
-            <>
+            <div className={"panel-wrapper"}>
                 <Form onSubmit={this.handleSubmit.bind(this)}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control name="title" type="text" placeholder="Enter title"
-                                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                          this.setState({title: e.target.value})
-                                      }}/>
-                    </Form.Group>
+                    <FormHeader>upload post</FormHeader>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Post content</Form.Label>
-                        <Form.Control name="content" as={"textarea"}
-                                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                            this.setState({content: e.target.value})
-                        }}/>
-                    </Form.Group>
+                    <FormField text={"title"}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({title: e.target.value})}
+                    />
 
-                    <Form.Group className="mb-3" controlId="formFileMultiple">
-                        <Form.Label>Upload photos</Form.Label>
-                        <Form.File name="files" multiple accept="image/*"
-                                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                       this.setState({files: e.target.files})
-                                   }}/>
-                    </Form.Group>
+                    <FormField text={"post content"} as={"textarea"}
+                               onChange={(e: ChangeEvent<HTMLTextAreaElement>)  => this.setState({content: e.target.value})}
+                    />
 
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+                    <FormField text={"upload photos"} as={"file"}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({files:e.target.files})}
+                    />
+
+                    <FormButton variant={"primary"}>submit</FormButton>
                 </Form>
-            </>
+            </div>
         );
     }
 }
