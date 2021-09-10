@@ -38,10 +38,10 @@ export default class Login extends Component<IProps, IState> {
         let response
         if (action == ActionType.LOGIN) {
             console.log("Login")
-            response = await Api.login({login: username, password})
+            response = await Api.login({username, password})
         } else {
             console.log("Register")
-            response = await Api.login({login: username, password})
+            response = await Api.register({username, password})
         }
 
         console.log(response)
