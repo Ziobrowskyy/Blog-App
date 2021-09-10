@@ -1,4 +1,4 @@
-import React, {Component, FormEvent} from "react";
+import React, {ChangeEvent, Component, FormEvent} from "react";
 import {Api} from "../API";
 import FormField from "./FormField";
 import FormButton from "./FormButton";
@@ -56,9 +56,13 @@ export default class Login extends Component<IProps, IState> {
                 <Form onSubmit={this.handleSubmit.bind(this)}>
                     <FormHeader>user login</FormHeader>
 
-                    <FormField text={"username"} onChange={event => this.setState({username: event.target.value})}/>
+                    <FormField text={"username"}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({username: e.target.value})}
+                    />
 
-                    <FormField text={"password"} type={"password"} onChange={event => this.setState({password: event.target.value})}/>
+                    <FormField text={"password"} type={"password"}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({password: e.target.value})}
+                    />
 
                     <div className={"button-wrapper"}>
                         <FormButton variant={"primary"} onClick={__ => this.setState({action: ActionType.LOGIN})}>
