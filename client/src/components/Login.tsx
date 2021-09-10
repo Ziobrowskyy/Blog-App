@@ -7,7 +7,7 @@ interface IProps {
 }
 
 interface IState {
-    login: string;
+    username: string;
     password: string;
 }
 
@@ -15,19 +15,21 @@ export default class Login extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            login: "",
+            username: "",
             password: ""
         }
     }
 
     async handleSubmit(event: FormEvent) {
         event.preventDefault()
-        const {login, password} = this.state
-        const response = await Api.login({login, password})
-        console.log(response)
-        if (response.data.success) {
-            console.log("LOGIN")
-            this.props.onLogin()
+        const {username, password} = this.state
+        try {
+            const response = await Api.login({username, password})
+            if (response.data.success) {
+                this.props.onLogin()
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -38,7 +40,7 @@ export default class Login extends Component<IProps, IState> {
                     <Form.Group className="mb-3">
                         <Form.Label>Login</Form.Label>
                         <Form.Control name="login" type="text"
-                                      onChange={event => this.setState({login: event.target.value})}/>
+                                      onChange={event => this.setState({username: event.target.value})}/>
                     </Form.Group>
 
                     <Form.Group className="mb-3">

@@ -13,6 +13,10 @@ interface ModelLoadError {
     (send : AppResponse) : void;
 }
 
+interface ModelLoadCondition {
+    () : boolean;
+}
+
 export default class AppResponse {
 
     protected res : Web.Response;
@@ -63,9 +67,17 @@ export default class AppResponse {
 
     }
 
-    public load(model : DataModel, onLoad : ModelLoadSuccess, onError : ModelLoadError) : AppResponse {
+    public save(name : string, value : string) : AppResponse {
 
-        model.status ? onLoad(this) : onError(this);
+        this.res.cookie(name, value);
+
+        return this;
+
+    }
+
+    public load(model : DataModel, onLoad : ModelLoadSuccess, onError : ModelLoadError, condition : ModelLoadCondition = () => true) : AppResponse {
+
+        model.status && condition() ? onLoad(this) : onError(this);
 
         return this;
 

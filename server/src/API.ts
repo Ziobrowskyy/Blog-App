@@ -3,6 +3,7 @@ import {ObjectID} from "mongodb";
 import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Database";
 import Post from "./data/Post";
 import AppResponse from "./web/AppResponse";
+import User from "./models/User";
 
 export namespace API {
     export async function createPost(req: Request, res: Response) {
@@ -54,8 +55,6 @@ export namespace API {
     export async function getAllPosts(req: Request, res: Response) {
         const posts = await new Post().fetchAll();
 
-        res.cookie('uid', '12');
-
         return new AppResponse(res).load(posts,
             send => send.success().with(posts.dataResult),
             send => send.error("Failed to find documents")
@@ -73,14 +72,19 @@ export namespace API {
     }
 
     export async function login(req: Request, res: Response) {
-        const {login, password} = req.body
+        const {username, password} = req.body
 
-        if (!login || !password)
+        if (!username || !password)
             new AppResponse(res).error("Login and password is required!").json()
 
-        const user = await getUsersCollection().findOne({username: login})
-        
-        new AppResponse(res).success("OK").json();
+        const user = await new User({ username, password }).login();
+
+        return new AppResponse(res).load(user, 
+            send => { send.success('OK').save('uid', user.dataResult._id); console.log(user.dataResult) },
+            send => send.error('Wrong username or password'),
+            () => user.dataResult
+        ).json();
 
     }
+
 }

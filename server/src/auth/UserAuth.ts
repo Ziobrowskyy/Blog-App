@@ -16,17 +16,8 @@ export default class User extends Auth<Fields> {
     @AuthAction init() : void {
         const {Session}=this;
 
-        console.log(Session.uid);
-
-        this.done();
         
-    }
-
-    public authorize(uid : string) {
-        const {Session}=this;
-
-        Session.set({ uid });
-
+        
     }
 
     static auth = Auth.set(User);
