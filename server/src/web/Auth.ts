@@ -1,9 +1,9 @@
+import Base from "../data/Base";
 import { NextFunction, Request, Response } from "express";
 import MiddlewareFunction from "../data/MiddlewareFunction";
 import Session from "./Session";
 
-
-export default abstract class Auth {
+export default abstract class Auth<SessionFields extends Base = {}> {
 
     protected request : Request;
 
@@ -11,7 +11,9 @@ export default abstract class Auth {
 
     protected done : NextFunction;
 
-    protected Session : Session;
+    protected Session : Session<SessionFields>;
+
+    protected unauthorized : string = "Unauthorized";
 
     public constructor(request : Request, response : Response, done : NextFunction) {
 
@@ -21,7 +23,7 @@ export default abstract class Auth {
 
         this.done = done;
 
-        this.Session = new Session(this.request.signedCookies);
+        this.Session = new Session<SessionFields>(this.request, this.response);
 
     }
 

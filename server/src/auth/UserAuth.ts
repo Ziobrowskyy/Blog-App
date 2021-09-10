@@ -1,22 +1,32 @@
+import AuthAction from "../tags/AuthAction";
+import Base from "../data/Base";
 import Auth from "../web/Auth";
 
-export default class User extends Auth {
-
+interface Fields extends Base {
     uid : string;
+}
+export default class User extends Auth<Fields> {
 
-    public validate() : Array<string> {
+    public validate() {
 
-        return [ "uid" ];
+        return [ 'uid' ];
 
     }
 
-    public init() : void {
-        const { Session } = this;
+    @AuthAction init() : void {
+        const {Session}=this;
 
-        Session.get();
-    
+        console.log(Session.uid);
+
         this.done();
         
+    }
+
+    public authorize(uid : string) {
+        const {Session}=this;
+
+        Session.set({ uid });
+
     }
 
     static auth = Auth.set(User);

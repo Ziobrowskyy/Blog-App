@@ -54,6 +54,8 @@ export namespace API {
     export async function getAllPosts(req: Request, res: Response) {
         const posts = await new Post().fetchAll();
 
+        res.cookie('uid', '12');
+
         return new AppResponse(res).load(posts,
             send => send.success().with(posts.dataResult),
             send => send.error("Failed to find documents")
@@ -77,12 +79,8 @@ export namespace API {
             new AppResponse(res).error("Login and password is required!").json()
 
         const user = await getUsersCollection().findOne({username: login})
-        console.log(user)
-        // if (!user) {
-        //     new AppResponse(res).error("Cannot find user in database").json()
-        // }
+        
+        new AppResponse(res).success("OK").json();
 
-
-        new AppResponse(res).success("OK").json()
     }
 }

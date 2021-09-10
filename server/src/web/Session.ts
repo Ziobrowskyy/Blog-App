@@ -1,19 +1,48 @@
+import Base, { Value } from "../data/Base";
 import { Request, Response, NextFunction } from "express";
 
-export default class Session {
+export default class Session<Interface extends Base> {
 
-    protected cookies : any;
+    protected request : Request;
 
-    public constructor(cookies : any) {
+    protected response : Response;
 
-        this.cookies = cookies;
+    public constructor(request : Request, response : Response) {
+
+        this.request = request;
+
+        this.response = response;
+
+    }
+
+    public load(fields : Array<string>) : void {
+
+        for (const field of fields) {
+
+            if (field in this.request.cookies) {
+
+                this[field] = this.request.cookies[field]
+
+                continue;
+
+            }
+
+            throw new Error();
+
+        }
 
     }
 
-    public get() {
+    public set(data : any) : void {
 
-        console.log(this.cookies);
+        for (const property in data) {
+
+            this.response.cookie(property, data[property]);
+
+        }
 
     }
+
+    [ property : string ] : Value<Interface>
 
 }
