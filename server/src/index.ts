@@ -68,6 +68,7 @@ app.get("/api/post/:id", API.getPost)
 app.get("/api/posts", API.getAllPosts)
 
 app.post("/api/login", API.login)
+app.post("/api/register", API.register)
 
 if (process.env.FILE_SAVE == "DATABASE")
     app.get("/static/:filename", API.getFile)

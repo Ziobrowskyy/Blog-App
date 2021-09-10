@@ -7,11 +7,12 @@ const api = axios.create({
 
 interface IApi {
     getAllPosts: () => Promise<AxiosResponse<NetResponse>>;
-    getPostById: (id: any) => Promise<AxiosResponse<NetResponse>>;
+    getPostById: (id: string) => Promise<AxiosResponse<NetResponse>>;
     insertPost: (data: FormData) => Promise<AxiosResponse<NetResponse>>;
-    updatePostById: (id: any, data: any) => Promise<AxiosResponse<NetResponse>>
-    deletePostById: (id: any) => Promise<AxiosResponse<NetResponse>>;
-    login: (data: any) => Promise<AxiosResponse<NetResponse>>
+    updatePostById: (id: string, data: any) => Promise<AxiosResponse<NetResponse>>
+    deletePostById: (id: string) => Promise<AxiosResponse<NetResponse>>;
+    login: (data: { username: string, password: string }) => Promise<AxiosResponse<NetResponse>>
+    register: (data: {username: string, password: string}) => Promise<AxiosResponse<NetResponse>>
 }
 
 export const Api: IApi = {
@@ -25,6 +26,9 @@ export const Api: IApi = {
     }),
     deletePostById: (id) => api.delete("/post/" + id),
     login: (data) => api.post("/login", data, {
+        headers: {"content-type": "application/json"}
+    }),
+    register: (data) => api.post("/register", data, {
         headers: {"content-type": "application/json"}
     })
 };

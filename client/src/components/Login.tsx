@@ -1,55 +1,74 @@
 import React, {Component, FormEvent} from "react";
-import {Button, Form} from "react-bootstrap";
 import {Api} from "../API";
+import FormField from "./FormField";
+import FormButton from "./FormButton";
+import FormHeader from "./FormHeader";
+import Form from "./Form";
+import "../styles/Login.scss"
 
 interface IProps {
     onLogin: () => void
 }
 
+enum ActionType {
+    LOGIN,
+    REGISTER
+}
+
 interface IState {
-    login: string;
-    password: string;
+    action: ActionType
+    username: string
+    password: string
 }
 
 export default class Login extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            login: "",
+            action: ActionType.LOGIN,
+            username: "",
             password: ""
         }
     }
 
-    async handleSubmit(event: FormEvent) {
-        event.preventDefault()
-        const {login, password} = this.state
-        const response = await Api.login({login, password})
+    async handleSubmit(e: FormEvent) {
+        e.preventDefault()
+        const {username, password, action} = this.state
+
+        let response
+        if (action == ActionType.LOGIN) {
+            console.log("Login")
+            response = await Api.login({username, password})
+        } else {
+            console.log("Register")
+            response = await Api.register({username, password})
+        }
+
         console.log(response)
         if (response.data.success) {
-            console.log("LOGIN")
             this.props.onLogin()
         }
     }
 
     render() {
         return (
-            <div>
+            <div className={"auth-wrapper"}>
                 <Form onSubmit={this.handleSubmit.bind(this)}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Login</Form.Label>
-                        <Form.Control name="login" type="text"
-                                      onChange={event => this.setState({login: event.target.value})}/>
-                    </Form.Group>
+                    <FormHeader>user login</FormHeader>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control name="password" type={"password"}
-                                      onChange={event => this.setState({password: event.target.value})}/>
-                    </Form.Group>
+                    <FormField text={"username"} onChange={event => this.setState({username: event.target.value})}/>
 
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+                    <FormField text={"password"} type={"password"} onChange={event => this.setState({password: event.target.value})}/>
+
+                    <div className={"button-wrapper"}>
+                        <FormButton variant={"primary"} onClick={__ => this.setState({action: ActionType.LOGIN})}>
+                            log in
+                        </FormButton>
+
+                        <FormButton onClick={__ => this.setState({action: ActionType.REGISTER})}>
+                            register
+                        </FormButton>
+                    </div>
                 </Form>
             </div>
         );

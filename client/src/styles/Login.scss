@@ -1,0 +1,15 @@
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .button-wrapper {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+
+    button {
+      width: 100px;
+    }
+  }
+}
