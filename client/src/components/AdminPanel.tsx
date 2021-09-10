@@ -27,14 +27,7 @@ class AdminPanel extends Component<any, IState> {
         event.preventDefault()
         const {title, content, files} = this.state
         const formData = new FormData(event.target as HTMLFormElement)
-        const formData2 = new FormData()
-        formData2.append("title", title)
-        formData2.append("content", content)
-        formData2.append("files", files)
-        console.log(formData.get("files"))
-        console.log(formData2.get("files"))
         const response = await Api.insertPost(formData)
-        console.log("Server response:")
         console.log(response)
     }
 
@@ -44,15 +37,15 @@ class AdminPanel extends Component<any, IState> {
                 <Form onSubmit={this.handleSubmit.bind(this)}>
                     <FormHeader>upload post</FormHeader>
 
-                    <FormField text={"title"}
+                    <FormField name={"title"} text={"title"}
                                onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({title: e.target.value})}
                     />
 
-                    <FormField text={"post content"} as={"textarea"}
+                    <FormField name={"content"} text={"post content"} as={"textarea"}
                                onChange={(e: ChangeEvent<HTMLTextAreaElement>)  => this.setState({content: e.target.value})}
                     />
 
-                    <FormField text={"upload photos"} as={"file"}
+                    <FormField name={"files"} text={"upload photos"} as={"file"}
                                onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({files:e.target.files})}
                     />
 
