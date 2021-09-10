@@ -1,22 +1,25 @@
 import AuthAction from "../tags/AuthAction";
-import Base from "../data/Base";
 import Auth from "../web/Auth";
+import UserModel from "../models/User";
+import AppResponse from "../web/AppResponse";
+import { STRING } from "../data/String";
 
-interface Fields extends Base {
-    uid : string;
-}
-export default class User extends Auth<Fields> {
+export default class User extends Auth {
 
-    public validate() {
+    public init() {
 
-        return [ 'uid' ];
+        this.fields("uid");
 
     }
 
-    @AuthAction init() : void {
+    @AuthAction async auth() {
         const {Session}=this;
 
+        const user = await new UserModel({ _id: Session.uid }).exist() 
         
+        user.status ? this.done() :
+
+        new AppResponse(this.response).error(user.errorMessage || STRING.Empty).json();
         
     }
 

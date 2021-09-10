@@ -10,6 +10,7 @@ export interface PostBodyType extends BodyType {
 }
 
 class Post extends Mediator implements PostAction {
+    protected collection = getPostsCollection();
     title: Property<string>
     content: Property<string>
     files: Property<Array<string>>
@@ -28,18 +29,18 @@ class Post extends Mediator implements PostAction {
     public createPost(): Promise<Post> {
         const {title, content, files, hasContent, hasFiles} = this;
 
-        return new Promise(Fetch => getPostsCollection().insertOne({title,content,files,hasContent,hasFiles}).then(this.result(Fetch), this.error(Fetch)));
+        return new Promise(Fetch => this.collection.insertOne({title,content,files,hasContent,hasFiles}).then(this.result(Fetch), this.error(Fetch)));
     }
 
     public getPost(): Promise<Post> {
         const {_id} = this;
 
-        return new Promise(Fetch => getPostsCollection().findOne({_id}).then(this.result(Fetch), this.error(Fetch)));
+        return new Promise(Fetch => this.collection.findOne({_id}).then(this.result(Fetch), this.error(Fetch)));
     }
 
     public fetchAll() : Promise<Post> {
         
-        return new Promise(Fetch => getPostsCollection().find().toArray().then(this.result(Fetch), this.error(Fetch)))
+        return new Promise(Fetch => this.collection.find().toArray().then(this.result(Fetch), this.error(Fetch)))
     }
 }
 

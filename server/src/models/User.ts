@@ -10,6 +10,7 @@ export interface UserBodyType extends BodyType {
 }
 
 export default class User extends Mediator  {
+    protected collection = getUsersCollection();
     username : Property<string>;
     password : Property<string>;
 
@@ -19,18 +20,37 @@ export default class User extends Mediator  {
         this.password = password;
     }
 
-    protected hashPassword() {
+    protected checkPassword(password : string) : boolean {
 
-        return bcrypt.hash(this.password || STRING.Empty, 10);
+        return bcrypt.compareSync(this.password as string, password);
 
     }
 
     public async login() : Promise<User> {
-        const {username} = this, password = await this.hashPassword();
+        
+        const result = await this.find('username');
 
-        console.log(password);
+        if (result && this.checkPassword(result.hash)) {
 
-        return new Promise(Fetch => getUsersCollection().findOne({ username }).then(this.result(Fetch), this.error(Fetch)));
+            return this.success();
+
+        }
+
+        return this.except("Wrong username or password");
+
+    }
+
+    public async exist() : Promise<User> {
+        
+        const result = await this.find("_id");
+
+        if (result && result._id) {
+
+            return this.success();
+
+        }
+
+        return this.except("User doesn't exist");
 
     }
 

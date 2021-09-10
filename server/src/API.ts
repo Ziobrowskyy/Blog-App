@@ -4,6 +4,7 @@ import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Data
 import Post from "./data/Post";
 import AppResponse from "./web/AppResponse";
 import User from "./models/User";
+import Session from "./web/Session";
 
 export namespace API {
     export async function createPost(req: Request, res: Response) {
@@ -74,17 +75,12 @@ export namespace API {
     export async function login(req: Request, res: Response) {
         const {username, password} = req.body
 
-        if (!username || !password)
-            new AppResponse(res).error("Login and password is required!").json()
-
         const user = await new User({ username, password }).login();
 
         return new AppResponse(res).load(user, 
-            send => { send.success('OK').save('uid', user.dataResult._id); console.log(user.dataResult) },
-            send => send.error('Wrong username or password'),
-            () => user.dataResult
+            send => send.success('OK').save('uid', user._id as string),
+            send => send.error(user.errorMessage as string)
         ).json();
-
     }
 
 }

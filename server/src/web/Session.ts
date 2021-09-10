@@ -1,11 +1,25 @@
-import Base, { Value } from "../data/Base";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
+import { STRING } from "../data/String";
 
-export default class Session<Interface extends Base> {
+export interface SessionInterface {
+    loadFields(fields : Array<string>) : void;
+    has(name : string) : boolean;
+    get(name : string) : string;
+    set(name : string, value : string) : void;
+    delete(name : string) : void;
+}
+
+export default class Session implements SessionInterface {
+
+    protected static settings = { httpOnly: true }
 
     protected request : Request;
 
     protected response : Response;
+
+    protected fields : Array<string>;
+
+    [ property : string ] : any;
 
     public constructor(request : Request, response : Response) {
 
@@ -13,15 +27,26 @@ export default class Session<Interface extends Base> {
 
         this.response = response;
 
+        this.fields = [];
+
     }
 
-    public load(fields : Array<string>) : void {
+    protected createField(field : string) : void {
+
+        Object.defineProperty(this, field, {
+            get: () => this.get(field),
+            set: (value : string) => this.set(field, value)
+        });
+
+    }
+
+    public loadFields(fields : Array<string>) : void {
 
         for (const field of fields) {
 
-            if (field in this.request.cookies) {
+            if (this.has(field)) {
 
-                this[field] = this.request.cookies[field]
+                this.createField(field);
 
                 continue;
 
@@ -33,16 +58,32 @@ export default class Session<Interface extends Base> {
 
     }
 
-    public set(data : any) : void {
+    public has(name : string) : boolean {
 
-        for (const property in data) {
-
-            this.response.cookie(property, data[property]);
-
-        }
+        return name in this.request.cookies;
 
     }
 
-    [ property : string ] : Value<Interface>
+    public get(name : string) : string {
+
+        return this.request.cookies[name];
+
+    }
+
+    public set(name : string, value : string) : void {
+
+        this.request.cookies[name] = value;
+
+        this.response.cookie(name, value, { ...Session.settings });
+
+    }
+
+    public delete(name : string) : void {
+
+        delete this.request.cookies[name];
+
+        this.response.cookie(name, STRING.Empty, { expires: new Date(), ...Session.settings });
+
+    }
 
 }

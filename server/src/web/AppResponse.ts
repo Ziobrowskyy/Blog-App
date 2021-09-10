@@ -75,9 +75,17 @@ export default class AppResponse {
 
     }
 
-    public load(model : DataModel, onLoad : ModelLoadSuccess, onError : ModelLoadError, condition : ModelLoadCondition = () => true) : AppResponse {
+    public remove(name : string) : AppResponse {
 
-        model.status && condition() ? onLoad(this) : onError(this);
+        this.res.cookie(name, STRING.Empty, { expires: new Date() });
+
+        return this;
+
+    }
+
+    public load(model : DataModel, onLoad : ModelLoadSuccess, onError : ModelLoadError) : AppResponse {
+
+        model.status ? onLoad(this) : onError(this);
 
         return this;
 

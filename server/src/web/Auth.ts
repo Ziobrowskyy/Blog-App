@@ -1,9 +1,13 @@
 import Base from "../data/Base";
 import { NextFunction, Request, Response } from "express";
 import MiddlewareFunction from "../data/MiddlewareFunction";
-import Session from "./Session";
+import Session, { SessionInterface } from "./Session";
 
-export default abstract class Auth<SessionFields extends Base = {}> {
+interface Fields {
+    uid : string;
+}
+
+export default abstract class Auth {
 
     protected request : Request;
 
@@ -11,7 +15,7 @@ export default abstract class Auth<SessionFields extends Base = {}> {
 
     protected done : NextFunction;
 
-    protected Session : Session<SessionFields>;
+    protected Session : Session;
 
     protected unauthorized : string = "Unauthorized";
 
@@ -23,25 +27,23 @@ export default abstract class Auth<SessionFields extends Base = {}> {
 
         this.done = done;
 
-        this.Session = new Session<SessionFields>(this.request, this.response);
+        this.Session = new Session(this.request, this.response);
 
     }
 
-    public init() : void {
+    protected fields(...fields : Array<string>) : void {
 
-        this.done();   
-
-    }
-
-    public validate() : Array<string> {
-
-        return [];
+        this.Session.loadFields(fields);
 
     }
+
+    public abstract init() : void;
+
+    public abstract auth() : void;
 
     public static set(Auth : new (req : Request, res : Response, next : NextFunction) => Auth) : MiddlewareFunction {
 
-        return (req : Request, res : Response, next : NextFunction) => new Auth(req, res, next).init();
+        return (req : Request, res : Response, next : NextFunction) => new Auth(req, res, next).auth();
 
     }
 
