@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -w",
+    "build and watch": "tsc -w",
+    "postinstall": "tsc && npm install --only=dev --prefix ./client && npm install --prefix ./client && npm run build --prefix ./client",
     "start": "nodemon server/out/index.js",
     "client start": "npm run start --prefix ./client",
     "client build": "npm run build --prefix ./client"
