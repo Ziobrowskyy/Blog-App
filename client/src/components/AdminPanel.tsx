@@ -1,9 +1,9 @@
-import React, {ChangeEvent, Component, FormEvent} from "react";
-import {Api} from "../API";
-import Form from "./Form";
-import FormField from "./FormField";
-import FormButton from "./FormButton";
-import FormHeader from "./FormHeader";
+import React, {ChangeEvent, Component, FormEvent} from "react"
+import {Api} from "../API"
+import Form from "./Form"
+import FormField from "./FormField"
+import FormButton from "./FormButton"
+import FormHeader from "./FormHeader"
 import "../styles/AdminPanel.scss"
 
 interface IState {
@@ -14,7 +14,7 @@ interface IState {
 
 class AdminPanel extends Component<any, IState> {
     constructor(props: any) {
-        super(props);
+        super(props)
 
         this.state = {
             title: "",
@@ -42,18 +42,18 @@ class AdminPanel extends Component<any, IState> {
                     />
 
                     <FormField name={"content"} text={"post content"} as={"textarea"}
-                               onChange={(e: ChangeEvent<HTMLTextAreaElement>)  => this.setState({content: e.target.value})}
+                               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({content: e.target.value})}
                     />
 
                     <FormField name={"files"} text={"upload photos"} as={"file"}
-                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({files:e.target.files})}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({files: e.target.files})}
                     />
 
                     <FormButton variant={"primary"}>submit</FormButton>
                 </Form>
             </div>
-        );
+        )
     }
 }
 
-export default AdminPanel;
+export default AdminPanel

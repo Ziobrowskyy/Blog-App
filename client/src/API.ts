@@ -1,9 +1,9 @@
-import axios, {AxiosResponse} from "axios";
-import NetResponse from "./data/NetResponse";
+import axios, {AxiosResponse} from "axios"
+import NetResponse from "./data/NetResponse"
 
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL || "/api",
-});
+})
 
 interface IApi {
     getAllPosts: () => Promise<AxiosResponse<NetResponse>>;
@@ -43,4 +43,4 @@ export const Api: IApi = {
     status: () => api.post("/status", {}, {
         headers: {"content-type": "application/json"}
     }),
-};
+}

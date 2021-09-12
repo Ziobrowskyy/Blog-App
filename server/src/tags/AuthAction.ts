@@ -1,22 +1,22 @@
-import Auth from "../web/Auth";
-import AppResponse from "../web/AppResponse";
-import Session from "../web/Session";
+import Auth from "../web/Auth"
+import AppResponse from "../web/AppResponse"
+import Session from "../web/Session"
 
-export default function AuthAction(target : Auth, property : string, descriptor : PropertyDescriptor) {
+export default function AuthAction(target: Auth, property: string, descriptor: PropertyDescriptor) {
 
-    const auth : (Session : Session) => void = descriptor.value;
+    const auth: (Session: Session) => void = descriptor.value
 
-    descriptor.value = function(this : Auth) {
+    descriptor.value = function (this: Auth) {
 
         try {
 
-            this.init();
+            this.init()
 
-            auth.call(this, this.Session);
+            auth.call(this, this.Session)
 
         } catch {
 
-            this.error(this.unauthorized);
+            this.error(this.unauthorized)
 
         }
 

@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Card, CloseButton} from "react-bootstrap";
+import React, {Component} from "react"
+import {Card, CloseButton} from "react-bootstrap"
 import "../styles/Post.scss"
 import Carousel from "./Carousel"
 
@@ -20,12 +20,12 @@ export interface PostData {
 export class Post extends Component<IProps> {
 
     public constructor(props: IProps) {
-        super(props);
-        this.removePost = this.removePost.bind(this);
+        super(props)
+        this.removePost = this.removePost.bind(this)
     }
 
     protected removePost(): void {
-        this.props.onDelete(this.props.data._id);
+        this.props.onDelete(this.props.data._id)
     }
 
     render() {

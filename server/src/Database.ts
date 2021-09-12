@@ -1,4 +1,4 @@
-import {Collection, GridFSBucket, MongoClient, MongoError} from "mongodb";
+import {Collection, GridFSBucket, MongoClient, MongoError} from "mongodb"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -7,7 +7,7 @@ dotenv.config()
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.bolnn.mongodb.net`
 
 const connectionOptions = "?retryWrites=true&w=majority"
-const dbName = 'blog-app'
+const dbName = "blog-app"
 
 export const mongoURI = `${uri}/${dbName}`
 
@@ -23,7 +23,7 @@ let filesCollection: GridFSBucket | undefined = undefined
 export function init(callback: ((err: MongoError) => void) | undefined = undefined) {
     client.connect((err, db) => {
         if (err) {
-            console.warn(err);
+            console.warn(err)
             if (callback) callback(err)
         }
         const database = db.db(dbName)

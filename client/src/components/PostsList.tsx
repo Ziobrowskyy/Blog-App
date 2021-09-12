@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {Api} from "../API";
-import {Post, PostData} from "./Post";
-import {Alert, Container} from "react-bootstrap";
-import HttpRequest from "../decorators/HttpRequest";
+import React, {Component} from "react"
+import {Api} from "../API"
+import {Post, PostData} from "./Post"
+import {Alert, Container} from "react-bootstrap"
+import HttpRequest from "../decorators/HttpRequest"
 import "../styles/PostsList.scss"
 
 enum Status {
@@ -23,8 +23,8 @@ export default class PostsList extends Component<any, IState> {
     }
 
     public constructor(props: object) {
-        super(props);
-        this.removePost = this.removePost.bind(this);
+        super(props)
+        this.removePost = this.removePost.bind(this)
     }
 
     componentDidMount = () => {
@@ -44,11 +44,11 @@ export default class PostsList extends Component<any, IState> {
 
     @HttpRequest
     protected async removePost(id: string) {
-        const response = await Api.deletePostById(id);
+        const response = await Api.deletePostById(id)
 
         if (response.data.success) {
-            const data = this.state.data.filter(data => data._id !== id);
-            this.setState({data});
+            const data = this.state.data.filter(data => data._id !== id)
+            this.setState({data})
         }
     }
 
@@ -56,12 +56,12 @@ export default class PostsList extends Component<any, IState> {
         const {status, data} = this.state
 
         switch (status) {
-            case Status.success:
-                return data.map((data: PostData, i: number) => <Post key={i} data={data} onDelete={this.removePost}/>)
-            case Status.fail:
-                return <Alert>Data could not be loaded</Alert>
-            default:
-                return <Alert>Page is loading</Alert>
+        case Status.success:
+            return data.map((data: PostData, i: number) => <Post key={i} data={data} onDelete={this.removePost}/>)
+        case Status.fail:
+            return <Alert>Data could not be loaded</Alert>
+        default:
+            return <Alert>Page is loading</Alert>
         }
     }
 
@@ -70,6 +70,6 @@ export default class PostsList extends Component<any, IState> {
             <Container className={"posts-wrapper"}>
                 {this.renderByStatus()}
             </Container>
-        );
+        )
     }
 }

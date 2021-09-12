@@ -1,10 +1,10 @@
-import {Request, Response} from "express";
-import {ObjectID} from "mongodb";
-import {Readable} from "stream";
-import {getFilesCollection, getPostsCollection} from "./Database";
-import Post from "./data/Post";
-import AppResponse from "./web/AppResponse";
-import User from "./models/User";
+import {Request, Response} from "express"
+import {ObjectID} from "mongodb"
+import {Readable} from "stream"
+import {getFilesCollection, getPostsCollection} from "./Database"
+import Post from "./data/Post"
+import AppResponse from "./web/AppResponse"
+import User from "./models/User"
 
 interface ICacheMap {
     [key: string]: Readable
@@ -15,24 +15,24 @@ const imageCache: ICacheMap = {}
 export namespace API {
 
     export async function status(req: Request, res: Response) {
-        const user = await new User({_id: req.Session.uid}).exist();
+        const user = await new User({_id: req.Session.uid}).exist()
 
         return new AppResponse(res).load(user, send => send.success(), send => send.error()).json()
     }
 
     export async function createPost(req: Request, res: Response) {
         const files: string[] = []
-        const {title, content} = req.params;
+        const {title, content} = req.params
 
         if (req.files instanceof Array)
-            files.push(...req.files.map(el => el.filename || ""));
+            files.push(...req.files.map(el => el.filename || ""))
 
-        const post = await new Post({title, content, files}).createPost();
+        const post = await new Post({title, content, files}).createPost()
 
         return new AppResponse(res).load(post,
             send => send.success(),
             send => send.error(`Failed to add data to database. ${post.errorMessage}`)
-        ).json();
+        ).json()
     }
 
     export function updatePost(req: Request, res: Response) {
@@ -58,21 +58,21 @@ export namespace API {
     }
 
     export async function getPost(req: Request, res: Response) {
-        const post = await new Post({_id: req.params.id}).getPost();
+        const post = await new Post({_id: req.params.id}).getPost()
 
         return new AppResponse(res).load(post,
             send => send.success().with(post.dataResult),
             send => send.error(`Failed to find document. ${post.errorMessage}`)
-        ).json();
+        ).json()
     }
 
     export async function getAllPosts(req: Request, res: Response) {
-        const posts = await new Post().fetchAll();
+        const posts = await new Post().fetchAll()
 
         return new AppResponse(res).load(posts,
             send => send.success().with(posts.dataResult),
             send => send.error("Failed to find documents")
-        ).json();
+        ).json()
     }
 
     export async function getFile(req: Request, res: Response) {
@@ -90,7 +90,7 @@ export namespace API {
             else
                 stream = getFilesCollection().openDownloadStreamByName(filename)
 
-            res.header("transfer-encoding", "chunked");
+            res.header("transfer-encoding", "chunked")
 
             stream.on("data", (chunk) => {
                 readable.push(chunk)
@@ -108,12 +108,12 @@ export namespace API {
     export async function login(req: Request, res: Response) {
         const {username, password} = req.body
 
-        const user = await new User({username, password}).login();
+        const user = await new User({username, password}).login()
 
         return new AppResponse(res, req).load(user,
-            send => send.success().save('uid', user.dataResult._id),
+            send => send.success().save("uid", user.dataResult._id),
             send => send.error(user.errorMessage)
-        ).json();
+        ).json()
     }
 
     export async function register(req: Request, res: Response) {

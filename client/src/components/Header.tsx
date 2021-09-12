@@ -1,4 +1,4 @@
-import {Component,forwardRef} from "react";
+import {Component, forwardRef} from "react"
 import {Link} from "react-router-dom"
 import logoImg from "../assets/images/logo.png"
 import fbLogoImg from "../assets/images/fb-logo.png"
@@ -16,7 +16,7 @@ interface IState {
 
 export default class Header extends Component<IProps, IState> {
     constructor(props: IProps) {
-        super(props);
+        super(props)
 
         this.state = {
             navVisible: false
@@ -28,11 +28,10 @@ export default class Header extends Component<IProps, IState> {
         this.setState({navVisible: !current})
     }
 
-    component = forwardRef<HTMLAnchorElement>((props, ref) => 
+    component = forwardRef<HTMLAnchorElement>((props, ref) =>
         <a ref={ref} {...props}>{props.children}</a>
-    );
+    )
 
-    
 
     render() {
         const {isLoggedIn} = this.props

@@ -1,4 +1,4 @@
-import React, {FormEvent, FormEventHandler, MouseEventHandler} from "react";
+import React, {FormEvent, FormEventHandler, MouseEventHandler} from "react"
 
 interface IProps {
     variant: "primary" | "secondary"

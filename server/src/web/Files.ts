@@ -1,7 +1,5 @@
-import {  } from "express";
+import {} from "express"
 
 export default class Files {
-
-    
 
 }

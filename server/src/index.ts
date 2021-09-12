@@ -5,8 +5,8 @@ import {GridFsStorage} from "multer-gridfs-storage"
 import * as Database from "./Database"
 import {API} from "./API"
 import path from "path"
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
+import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 import User from "./auth/UserAuth"
 import Session from "./web/Session"
 import {Site} from "./Site"
@@ -25,18 +25,18 @@ if (process.env.FILE_SAVE == "LOCAL")
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(cors())
-app.use(cookieParser());
+app.use(cookieParser())
 
 //serve client files from build path
-app.use(express.static(path.join(__dirname, "../../client/build")));
+app.use(express.static(path.join(__dirname, "../../client/build")))
 
 //init session
-app.use(Session.init());
+app.use(Session.init())
 
 //file save handling locally
 const localStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/')
+        cb(null, "uploads/")
     },
     filename: (req, file, cb) => {
         const suffix = Date.now()
@@ -48,13 +48,12 @@ const localStorage = multer.diskStorage({
 const gridFSStorage = new GridFsStorage({
     url: Database.mongoURI,
     file: ((request, file) => {
-            const suffix = Date.now()
-            return {
-                filename: suffix + file.originalname,
-                bucketName: "files"
-            }
+        const suffix = Date.now()
+        return {
+            filename: suffix + file.originalname,
+            bucketName: "files"
         }
-    )
+    })
 })
 
 const localImageUpload = multer({storage: localStorage}).array("files")
@@ -65,7 +64,7 @@ Database.init(err => {
     throw(err)
 })
 
-app.post("/api/status", API.status);
+app.post("/api/status", API.status)
 
 if (process.env.FILE_SAVE == "DATABASE")
     app.post("/api/post", User.auth(), gridFSImageUpload, API.createPost)
@@ -83,16 +82,16 @@ app.post("/api/register", API.register)
 if (process.env.FILE_SAVE == "DATABASE")
     app.get("/static/:filename", API.getFile)
 
-app.get("/", Site.index);
+app.get("/", Site.index)
 
-app.get("/about", Site.index);
+app.get("/about", Site.index)
 
-app.get("/admin-panel", User.auth("/"), Site.index);
+app.get("/admin-panel", User.auth("/"), Site.index)
 
-app.get("/login", User.unauth("/"), Site.index);
+app.get("/login", User.unauth("/"), Site.index)
 
 //app.get("/*", Site.index);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`)
-});
+})

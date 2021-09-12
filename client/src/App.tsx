@@ -1,27 +1,27 @@
-import React, {useState} from "react";
+import React, {useState} from "react"
 import {createBrowserHistory} from "history"
-import {Route, Router, Switch} from "react-router";
-import Header from "./components/Header";
+import {Route, Router, Switch} from "react-router"
+import Header from "./components/Header"
 import PostsList from "./components/PostsList"
-import AdminPanel from "./components/AdminPanel";
-import About from "./components/About";
-import PageNotFound from "./components/PageNotFound";
-import Login from "./components/Login";
+import AdminPanel from "./components/AdminPanel"
+import About from "./components/About"
+import PageNotFound from "./components/PageNotFound"
+import Login from "./components/Login"
 import "./styles/App.scss"
-import { Api } from "./API";
+import {Api} from "./API"
 
 const history = createBrowserHistory()
 
 export default function App() {
-    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [isLoggedIn, setLoggedIn] = useState(false)
 
-    const onLogin = () => { 
-        history.replace("/");
+    const onLogin = () => {
+        history.replace("/")
     }
 
-    const checkLoginStatus = () => Api.status().then(result => setLoggedIn(true)).catch(error => setLoggedIn(false));
+    const checkLoginStatus = () => Api.status().then(result => setLoggedIn(true)).catch(error => setLoggedIn(false))
 
-    checkLoginStatus();
+    checkLoginStatus()
 
     return (
         <>
@@ -38,5 +38,5 @@ export default function App() {
                 </div>
             </Router>
         </>
-    );
+    )
 }

@@ -1,1 +1,1 @@
-export type Property<Type> = Type | undefined;
+export type Property<Type> = Type | undefined

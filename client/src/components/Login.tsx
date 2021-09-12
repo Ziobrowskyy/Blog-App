@@ -1,9 +1,9 @@
-import React, {ChangeEvent, Component, FormEvent} from "react";
-import {Api} from "../API";
-import FormField from "./FormField";
-import FormButton from "./FormButton";
-import FormHeader from "./FormHeader";
-import Form from "./Form";
+import React, {ChangeEvent, Component, FormEvent} from "react"
+import {Api} from "../API"
+import FormField from "./FormField"
+import FormButton from "./FormButton"
+import FormHeader from "./FormHeader"
+import Form from "./Form"
 import "../styles/Login.scss"
 
 interface IProps {
@@ -75,6 +75,6 @@ export default class Login extends Component<IProps, IState> {
                     </div>
                 </Form>
             </div>
-        );
+        )
     }
 }

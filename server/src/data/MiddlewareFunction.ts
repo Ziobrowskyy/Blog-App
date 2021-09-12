@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import {Request, Response, NextFunction} from "express"
 
 export default interface MiddlewareFunction {
-    (req : Request, res : Response, next : NextFunction) : void;
+    (req: Request, res: Response, next: NextFunction): void;
 }

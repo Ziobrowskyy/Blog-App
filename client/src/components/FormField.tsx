@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler, HTMLInputTypeAttribute} from "react";
+import React, {ChangeEventHandler, HTMLInputTypeAttribute} from "react"
 
 interface IProps {
     name?: string
@@ -16,13 +16,13 @@ export default class FormField extends React.Component<IProps> {
     RenderByType() {
         const onChange = this.props.onChange
         switch (this.props.as) {
-            case("textarea"):
-                return <TextAreaInput name={this.props.name} onChange={onChange as ChangeEventHandler<HTMLTextAreaElement>}/>
-            case("file"):
-                return <FileInput name={this.props.name} onChange={onChange as ChangeEventHandler<HTMLInputElement>}/>
-            case("input"):
-            default:
-                return <DefaultInput name={this.props.name} type={this.props.type} onChange={onChange as ChangeEventHandler<HTMLInputElement>}/>
+        case("textarea"):
+            return <TextAreaInput name={this.props.name} onChange={onChange as ChangeEventHandler<HTMLTextAreaElement>}/>
+        case("file"):
+            return <FileInput name={this.props.name} onChange={onChange as ChangeEventHandler<HTMLInputElement>}/>
+        case("input"):
+        default:
+            return <DefaultInput name={this.props.name} type={this.props.type} onChange={onChange as ChangeEventHandler<HTMLInputElement>}/>
         }
     }
 
