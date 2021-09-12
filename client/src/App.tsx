@@ -17,6 +17,7 @@ export default function App() {
 
     const onLogin = () => { 
         history.replace("/");
+        checkLoginStatus();
     }
 
     const checkLoginStatus = () => Api.status().then(result => setLoggedIn(true)).catch(error => setLoggedIn(false));

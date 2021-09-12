@@ -88,4 +88,13 @@ export namespace API {
         ).json();
     }
 
+    export async function logout(req: Request, res: Response) {
+        const {Session} = req;
+
+        Session.delete('uid');
+
+        return new AppResponse(res).success().json();
+        
+    }
+
 }

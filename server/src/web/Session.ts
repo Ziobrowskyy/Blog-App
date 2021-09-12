@@ -10,9 +10,14 @@ export interface SessionInterface {
     delete(name : string) : void;
 }
 
+interface SessionSetting {
+    httpOnly : boolean;
+    sameSite : "lax"
+}
+
 export default class Session implements SessionInterface {
 
-    protected static settings = { httpOnly: true }
+    protected static settings : SessionSetting = { httpOnly: true, sameSite: "lax" };
 
     protected request : Request;
 

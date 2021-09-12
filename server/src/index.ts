@@ -67,14 +67,16 @@ app.post("/api/status", API.status);
 if (process.env.FILE_SAVE == "DATABASE")
     app.post("/api/post",  User.auth(), gridFSImageUpload, API.createPost)
 else
-    app.post("/api/post", User.auth(), localImageUpload, API.createPost)
+    app.post("/api/post", User.auth(), localImageUpload, API.createPost);
 
-app.put("/api/post/:id", User.auth(), API.updatePost)
-app.delete("/api/post/:id", User.auth(), API.deletePost)
-app.get("/api/post/:id", API.getPost)
-app.get("/api/posts", API.getAllPosts)
+app.put("/api/post/:id", User.auth(), API.updatePost);
+app.delete("/api/post/:id", User.auth(), API.deletePost);
+app.get("/api/post/:id", API.getPost);
+app.get("/api/posts", API.getAllPosts);
 
-app.post("/api/login", User.unauth(), API.login)
+app.post("/api/login", User.unauth(), API.login);
+
+app.post("/api/logout", User.auth(), API.logout);
 
 if (process.env.FILE_SAVE == "DATABASE")
     app.get("/static/:filename", API.getFile)

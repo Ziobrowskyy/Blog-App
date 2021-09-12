@@ -3,6 +3,8 @@ import AppResponse from "./web/AppResponse";
 
 export namespace Site {
 
-    export const index = (request : Request, response : Response) => new AppResponse(response).indexSite(__dirname);
+    export function index(request : Request, response : Response) {
+        new AppResponse(response).indexSite(__dirname);
+    }
 
 }

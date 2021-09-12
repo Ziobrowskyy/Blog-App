@@ -85,7 +85,7 @@ export default class AppResponse {
 
     public save(name : string, value : string = STRING.Empty) : AppResponse {
 
-        this.res.cookie(name, value);
+        this.req.Session.set(name, value);
 
         return this;
 
@@ -93,7 +93,7 @@ export default class AppResponse {
 
     public remove(name : string) : AppResponse {
 
-        this.res.cookie(name, STRING.Empty, { expires: new Date() });
+        this.req.Session.delete(name);
 
         return this;
 
@@ -114,6 +114,12 @@ export default class AppResponse {
             "message": this.message,
             "data": this.data ? JSON.stringify(this.data) : this.data
         });
+
+    }
+
+    public html(content : string) : void {
+
+        this.res.contentType('html').send(content);
 
     }
 
