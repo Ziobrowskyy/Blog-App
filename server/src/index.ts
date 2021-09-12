@@ -27,16 +27,10 @@ app.use(express.urlencoded())
 app.use(cors())
 app.use(cookieParser());
 
-#serve
-client
-files
-from
-build
-path
+//serve client files from build path
 app.use(express.static(path.join(__dirname, "../../client/build")));
 
-#init
-session
+//init session
 app.use(Session.init());
 
 //file save handling locally

@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import {ObjectID} from "mongodb";
 import {Readable} from "stream";
-import User from "./data/User";
 import {getFilesCollection, getPostsCollection} from "./Database";
 import Post from "./data/Post";
 import AppResponse from "./web/AppResponse";
@@ -15,20 +14,20 @@ const imageCache: ICacheMap = {}
 
 export namespace API {
 
-    export async function status(req : Request, res : Response) {
-        const user = await new User({ _id: req.Session.uid }).exist();
+    export async function status(req: Request, res: Response) {
+        const user = await new User({_id: req.Session.uid}).exist();
 
         return new AppResponse(res).load(user, send => send.success(), send => send.error()).json()
     }
 
     export async function createPost(req: Request, res: Response) {
         const files: string[] = []
-        const {title,content} = req.params;
+        const {title, content} = req.params;
 
         if (req.files instanceof Array)
             files.push(...req.files.map(el => el.filename || ""));
 
-        const post = await new Post({title,content,files}).createPost();
+        const post = await new Post({title, content, files}).createPost();
 
         return new AppResponse(res).load(post,
             send => send.success(),
@@ -109,31 +108,31 @@ export namespace API {
     export async function login(req: Request, res: Response) {
         const {username, password} = req.body
 
-        const user = await new User({ username, password }).login();
+        const user = await new User({username, password}).login();
 
         return new AppResponse(res, req).load(user,
             send => send.success().save('uid', user.dataResult._id),
             send => send.error(user.errorMessage)
         ).json();
     }
+
     export async function register(req: Request, res: Response) {
         const {username, password} = req.body
-        const collection = getUsersCollection()
 
-        if(!username || !password) {
+        if (!username || !password) {
             new AppResponse(res).error("need username and password").json()
             return
         }
 
-        const user = new User({username,password})
+        const user = new User({username, password})
 
         //check if user exists in db
-        if(await user.findInDb(collection)) {
+        if (await user.findInDb()) {
             new AppResponse(res).error("User exists in database").json()
             return
         }
 
-        const id = await user.register(collection)
+        const id = await user.register()
 
         new AppResponse(res).success(`User registration success! User id: ${id}`).json()
     }
