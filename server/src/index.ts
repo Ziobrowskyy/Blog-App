@@ -77,6 +77,7 @@ app.get("/api/post/:id", API.getPost)
 app.get("/api/posts", API.getAllPosts)
 
 app.post("/api/login", User.unauth(), API.login)
+app.post("/api/logout", User.auth(), API.logout)
 app.post("/api/register", API.register)
 
 if (process.env.FILE_SAVE == "DATABASE")

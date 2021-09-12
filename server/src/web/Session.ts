@@ -3,23 +3,29 @@ import {NextFunction, Request, Response} from "express"
 import {STRING} from "../data/String"
 
 export interface SessionInterface {
-    loadFields(fields: Array<string>): void;
+    loadFields(fields: Array<string>): void
 
-    has(name: string): boolean;
+    has(name: string): boolean
 
-    get(name: string): string;
+    get(name: string): string
 
-    set(name: string, value: string): void;
+    set(name: string, value: string): void
 
-    delete(name: string): void;
+    delete(name: string): void
+}
+
+interface SessionSettings {
+    httpOnly: boolean
+    sameSite: "lax"
 }
 
 export default class Session implements SessionInterface {
 
-    protected static settings = {httpOnly: true}
+    protected static settings: SessionSettings = {httpOnly: true, sameSite: "lax"}
     protected request: Request
     protected response: Response
     protected fields: Array<string>
+
     [property: string]: any;
 
     public constructor(request: Request, response: Response) {
