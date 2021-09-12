@@ -20,36 +20,18 @@ export default class User extends Mediator  {
     }
 
     protected checkPassword(password : string) : boolean {
-
         return bcrypt.compareSync(this.password as string, password);
-
     }
 
     public async login() : Promise<User> {
-        
         const result = await this.find('username');
-
-        if (result && this.checkPassword(result.hash)) {
-
-            return this.success(result);
-
-        }
-
-        return this.except("Wrong username or password");
+        return result && this.checkPassword(result.hash) ? this.success(result) : this.except("Wrong username or password");
 
     }
 
     public async exist() : Promise<User> {
-        
         const result = await this.find("_id");
-
-        if (result && result._id) {
-
-            return this.success();
-
-        }
-
-        return this.except("User doesn't exist");
+        return result && result._id ? this.success(result) : this.except("User doesn't exist");
 
     }
 

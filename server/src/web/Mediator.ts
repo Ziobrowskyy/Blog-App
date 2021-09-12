@@ -35,7 +35,7 @@ export default abstract class Mediator<DataType = any> implements DataModel<Data
 
         fields.forEach(field => filter[field] = (this as any)[field]);
 
-        return this.collection.findOne(filter);        
+        return this.collection.findOne(filter);
 
     }
 
