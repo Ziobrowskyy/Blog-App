@@ -1,4 +1,6 @@
+import Base from "../data/Base";
 import * as Web from "express";
+import { join } from "path";
 import Data from "../data/Data";
 import { DataValue } from "../data/DataValue";
 import { HttpStatus } from "../data/HttpStatus";
@@ -15,6 +17,8 @@ interface ModelLoadError {
 
 export default class AppResponse {
 
+    protected req : Web.Request;
+
     protected res : Web.Response;
 
     protected status : number;
@@ -23,7 +27,9 @@ export default class AppResponse {
 
     protected data : Data | Array<DataValue<Data>>;
 
-    public constructor(res : Web.Response) {
+    public constructor(res : Web.Response, req : Web.Request = Web.request) {
+
+        this.req = req;
 
         this.res = res;
 
@@ -32,6 +38,20 @@ export default class AppResponse {
         this.message = STRING.Empty;
 
         this.data = {};
+
+    }
+
+    public pass(to : Web.NextFunction, data : Base = {}) {
+
+        Object.keys(data).map(key => this.req.Session[key] = data[key]);
+
+        to();
+
+    }
+
+    public redirect(path : string) : void {
+
+        this.res.redirect(path);
 
     }
 
@@ -63,6 +83,22 @@ export default class AppResponse {
 
     }
 
+    public save(name : string, value : string = STRING.Empty) : AppResponse {
+
+        this.res.cookie(name, value);
+
+        return this;
+
+    }
+
+    public remove(name : string) : AppResponse {
+
+        this.res.cookie(name, STRING.Empty, { expires: new Date() });
+
+        return this;
+
+    }
+
     public load(model : DataModel, onLoad : ModelLoadSuccess, onError : ModelLoadError) : AppResponse {
 
         model.status ? onLoad(this) : onError(this);
@@ -78,6 +114,12 @@ export default class AppResponse {
             "message": this.message,
             "data": this.data ? JSON.stringify(this.data) : this.data
         });
+
+    }
+
+    public indexSite(root : string) : void {
+
+        this.res.sendFile(join(root, "../../client/build/index.html"))
 
     }
 

@@ -10,6 +10,7 @@
     ],
     "sourceMap": true,
     "outDir": "./server/out",
+    "rootDir": "./server/src",
     "moduleResolution": "node",
     "removeComments": true,
     "noImplicitAny": true,
@@ -25,8 +26,19 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "./server",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "./server/src",
+    "paths": {
+      "auth": [ "./server/src/auth" ],
+      "data": [ "./server/src/data" ],
+      "mediators": [ "./server/src/mediators" ],
+      "web": [ "./server/src/web" ]
+    },
+    "typeRoots": [
+      "./server/types/session",
+      "./server/types/user-auth",
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
     "node_modules"

@@ -1,34 +1,75 @@
+import { Property } from "../data/types/Property";
 import DataModel from "./DataModel";
+import { Collection, ObjectID } from "mongodb";
+import { STRING } from "../data/String";
 
 type Fetch = (value: any | PromiseLike<any>) => void;
 
 export interface BodyType {
-    _id : string;
+    _id : Property<string>;
 }
 
-export default class Mediator<DataType = any> implements DataModel<DataType>, BodyType {
+export default abstract class Mediator<DataType = any> implements DataModel<DataType> {
+
+    protected abstract collection : Collection<any>;
 
     status : boolean;
 
-    dataResult : DataType | null;
+    dataResult : DataType | undefined;
 
-    errorMessage : string | null;
+    errorMessage : string | undefined;
 
-    _id : string;
+    _id : Property<ObjectID>;
 
-    public constructor(_id : string) {
+    public constructor(_id : Property<string>) {
 
-        this._id = _id;
+        this._id = new ObjectID(_id);
 
         this.status = true;
 
-        this.dataResult = null;
+    }
 
-        this.errorMessage = null;
+    public find(...fields : Array<string>) {
+
+        let filter : any = {};
+
+        fields.forEach(field => filter[field] = (this as any)[field]);
+
+        return this.collection.findOne(filter);        
 
     }
 
-    protected result = (Fetch : Fetch) => (dataResult : DataType | null = null) => {
+    public findAll(...fields : Array<string>) {
+
+        let filter : any = {};
+
+        fields.forEach(field => filter[field] = (this as any)[field]);
+
+        return this.collection.find(filter).toArray();        
+
+    }
+
+    protected success(data : DataType | undefined = undefined) {
+
+        this.status = true;
+
+        this.dataResult = data;
+
+        return this;
+
+    }
+
+    protected except(error : string = STRING.Empty) {
+
+        this.status = false;
+
+        this.errorMessage = error;
+
+        return this;
+
+    }
+
+    protected result = (Fetch : Fetch) => (dataResult : DataType | undefined = undefined) => {
 
         this.dataResult = dataResult;
 

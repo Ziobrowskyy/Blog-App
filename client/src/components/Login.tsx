@@ -23,7 +23,7 @@ interface IState {
 
 export default class Login extends Component<IProps, IState> {
     constructor(props: IProps) {
-        super(props);
+        super(props)
         this.state = {
             action: ActionType.LOGIN,
             username: "",

@@ -1,5 +1,5 @@
-import { ActionResult } from "src/data/ActionReult";
-import Post from "src/data/Post";
+import { ActionResult } from "../data/ActionReult";
+import Post from "../data/Post";
 
 export interface PostAction {
     createPost() : Promise<Post>;

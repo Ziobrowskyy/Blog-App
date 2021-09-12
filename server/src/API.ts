@@ -1,32 +1,39 @@
-import Post from "./data/Post";
 import {Request, Response} from "express";
-import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Database";
-import AppResponse from "./web/AppResponse";
 import {ObjectID} from "mongodb";
 import {Readable} from "stream";
 import User from "./data/User";
+import {getFilesCollection, getPostsCollection} from "./Database";
+import Post from "./data/Post";
+import AppResponse from "./web/AppResponse";
+import User from "./models/User";
 
 interface ICacheMap {
     [key: string]: Readable
 }
 
+const imageCache: ICacheMap = {}
+
 export namespace API {
-    const imageCache: ICacheMap = {}
+
+    export async function status(req : Request, res : Response) {
+        const user = await new User({ _id: req.Session.uid }).exist();
+
+        return new AppResponse(res).load(user, send => send.success(), send => send.error()).json()
+    }
 
     export async function createPost(req: Request, res: Response) {
-        const files: string[] = [];
+        const files: string[] = []
+        const {title,content} = req.params;
 
         if (req.files instanceof Array)
             files.push(...req.files.map(el => el.filename || ""));
 
-
-        const post = await new Post({...req.body, files}).createPost();
+        const post = await new Post({title,content,files}).createPost();
 
         return new AppResponse(res).load(post,
             send => send.success(),
             send => send.error(`Failed to add data to database. ${post.errorMessage}`)
         ).json();
-
     }
 
     export function updatePost(req: Request, res: Response) {
@@ -52,22 +59,21 @@ export namespace API {
     }
 
     export async function getPost(req: Request, res: Response) {
-        const post = await new Post({_id: req.params.id, ...req.body}).getPost();
+        const post = await new Post({_id: req.params.id}).getPost();
 
         return new AppResponse(res).load(post,
-            send => send.success(post.dataResult),
+            send => send.success().with(post.dataResult),
             send => send.error(`Failed to find document. ${post.errorMessage}`)
-        );
+        ).json();
     }
 
     export async function getAllPosts(req: Request, res: Response) {
-        const documents = await getPostsCollection().find().toArray()
+        const posts = await new Post().fetchAll();
 
-        if (documents) {
-            new AppResponse(res).success().with(documents).json();
-        } else {
-            new AppResponse(res).error("Failed to find documents").json();
-        }
+        return new AppResponse(res).load(posts,
+            send => send.success().with(posts.dataResult),
+            send => send.error("Failed to find documents")
+        ).json();
     }
 
     export async function getFile(req: Request, res: Response) {
@@ -102,28 +108,14 @@ export namespace API {
 
     export async function login(req: Request, res: Response) {
         const {username, password} = req.body
-        const response = new AppResponse(res)
-        const collection = getUsersCollection()
 
-        if (!username || !password) {
-            response.error("Login and password is required!").json()
-            return
-        }
+        const user = await new User({ username, password }).login();
 
-        const user = new User({username, password})
-
-        if(!await user.findInDb(collection)) {
-            new AppResponse(res).error("User does not exist").json()
-            return
-        }
-
-        if(await new User({username,password}).login(collection))
-            response.success("OK").json()
-        else
-            response.error("Cannot validate user with given password").json()
-
+        return new AppResponse(res, req).load(user,
+            send => send.success().save('uid', user.dataResult._id),
+            send => send.error(user.errorMessage)
+        ).json();
     }
-
     export async function register(req: Request, res: Response) {
         const {username, password} = req.body
         const collection = getUsersCollection()
