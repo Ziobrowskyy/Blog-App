@@ -1,11 +1,11 @@
-import Base from "../data/Base";
+import { STRING } from "../data/String";
 import { NextFunction, Request, Response } from "express";
 import MiddlewareFunction from "../data/MiddlewareFunction";
-import Session, { SessionInterface } from "./Session";
+import Session from "./Session";
+import AppResponse from "./AppResponse";
+import Base from "../data/Base";
 
-interface Fields {
-    uid : string;
-}
+export type AuthObject = new (req : Request, res : Response, next : NextFunction) => Auth;
 
 export default abstract class Auth {
 
@@ -15,9 +15,11 @@ export default abstract class Auth {
 
     protected done : NextFunction;
 
-    protected Session : Session;
+    protected authorized : string = "Authorized";
 
     protected unauthorized : string = "Unauthorized";
+
+    protected redirect : string;
 
     public constructor(request : Request, response : Response, done : NextFunction) {
 
@@ -27,24 +29,55 @@ export default abstract class Auth {
 
         this.done = done;
 
-        this.Session = new Session(this.request, this.response);
+        this.redirect = STRING.Empty;
 
     }
 
     protected fields(...fields : Array<string>) : void {
 
-        this.Session.loadFields(fields);
+        for (const field of fields) 
+
+            if (!this.Session.has(field)) 
+
+                throw new Error();
+
+    }
+
+    public toRedirect(redirect : string) : Auth {
+
+        this.redirect = redirect;
+
+        return this;
+
+    }
+
+    public get Session() : Session {
+
+        return this.request.Session;
+
+    }
+
+    public error(errorMessage : string = STRING.Empty) : void {
+
+        this.redirect ?
+
+            new AppResponse(this.response, this.request).redirect(this.redirect) :
+
+            new AppResponse(this.response, this.request).error(errorMessage).json()
 
     }
 
     public abstract init() : void;
 
-    public abstract auth() : void;
+    public abstract auth(Session : Session) : void;
 
-    public static set(Auth : new (req : Request, res : Response, next : NextFunction) => Auth) : MiddlewareFunction {
+    public abstract unauth(Session : Session) : void;
 
-        return (req : Request, res : Response, next : NextFunction) => new Auth(req, res, next).auth();
+    public static set = (Auth : AuthObject, redirect : string) : MiddlewareFunction => (req : Request, res : Response, next : NextFunction) => 
+    
+        new Auth(req, res, next).toRedirect(redirect).auth(req.Session);
 
-    }
-
+    public static unset = (Auth : AuthObject, redirect : string) : MiddlewareFunction => (req : Request, res : Response, next : NextFunction) => 
+    
+        new Auth(req, res, next).toRedirect(redirect).unauth(req.Session);
 }

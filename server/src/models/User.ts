@@ -2,7 +2,6 @@ import { getUsersCollection } from "../Database";
 import { Property } from "../data/types/Property";
 import Mediator, { BodyType } from "../web/Mediator";
 import * as bcrypt from "bcrypt";
-import { STRING } from "../data/String";
 
 export interface UserBodyType extends BodyType {
     username : string;
@@ -32,7 +31,7 @@ export default class User extends Mediator  {
 
         if (result && this.checkPassword(result.hash)) {
 
-            return this.success();
+            return this.success(result);
 
         }
 

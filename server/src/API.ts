@@ -1,12 +1,18 @@
 import {Request, Response} from "express";
 import {ObjectID} from "mongodb";
-import {getFilesCollection, getPostsCollection, getUsersCollection} from "./Database";
+import {getFilesCollection, getPostsCollection} from "./Database";
 import Post from "./data/Post";
 import AppResponse from "./web/AppResponse";
 import User from "./models/User";
-import Session from "./web/Session";
 
 export namespace API {
+
+    export async function status(req : Request, res : Response) {
+        const user = await new User({ _id: req.Session.uid }).exist();
+
+        return new AppResponse(res).load(user, send => send.success(), send => send.error()).json()
+    }
+
     export async function createPost(req: Request, res: Response) {
         const files: string[] = [], {title,content} = req.params;
 
@@ -19,7 +25,6 @@ export namespace API {
             send => send.success(),
             send => send.error(`Failed to add data to database. ${post.errorMessage}`)
         ).json();
-
     }
 
     export function updatePost(req: Request, res: Response) {
@@ -77,9 +82,9 @@ export namespace API {
 
         const user = await new User({ username, password }).login();
 
-        return new AppResponse(res).load(user, 
-            send => send.success('OK').save('uid', user._id as string),
-            send => send.error(user.errorMessage as string)
+        return new AppResponse(res, req).load(user, 
+            send => send.success().save('uid', user.dataResult._id),
+            send => send.error(user.errorMessage)
         ).json();
     }
 

@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express"
+import express from "express"
 import cors from "cors"
 import multer from "multer"
 import {GridFsStorage} from "multer-gridfs-storage"
@@ -6,13 +6,13 @@ import * as Database from "./Database"
 import {API} from "./API"
 import path from "path"
 import dotenv from "dotenv";
-import ExpressWs from "express-ws";
 import cookieParser from "cookie-parser";
 import User from "./auth/UserAuth"
+import Session from "./web/Session"
+import { Site } from "./Site"
 
 //express app and port to run at
 const app = express()
-const appWS = ExpressWs(app);
 
 dotenv.config()
 
@@ -27,6 +27,8 @@ app.use(express.urlencoded())
 app.use(cors())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../../client/build")));
+
+app.use(Session.init());
 
 //file save handling locally
 const localStorage = multer.diskStorage({
@@ -60,25 +62,31 @@ Database.init(err => {
     throw(err)
 })
 
+app.post("/api/status", API.status);
+
 if (process.env.FILE_SAVE == "DATABASE")
-    app.post("/api/post", gridFSImageUpload, API.createPost)
+    app.post("/api/post",  User.auth(), gridFSImageUpload, API.createPost)
 else
-    app.post("/api/post", localImageUpload, API.createPost)
+    app.post("/api/post", User.auth(), localImageUpload, API.createPost)
 
-app.put("/api/post/:id", API.updatePost)
-app.delete("/api/post/:id", API.deletePost)
+app.put("/api/post/:id", User.auth(), API.updatePost)
+app.delete("/api/post/:id", User.auth(), API.deletePost)
 app.get("/api/post/:id", API.getPost)
-app.get("/api/posts", User.auth, API.getAllPosts)
+app.get("/api/posts", API.getAllPosts)
 
-app.post("/api/login", API.login)
+app.post("/api/login", User.unauth(), API.login)
 
 if (process.env.FILE_SAVE == "DATABASE")
     app.get("/static/:filename", API.getFile)
 
-app.get("/*", (req: Request, res:Response) => {
-    res.sendFile(path.join(__dirname, "../../client/build/index.html"));
-});
+app.get("/", Site.index);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`)
-});
+app.get("/about", Site.index);
+
+app.get("/admin-panel", User.auth("/"), Site.index);
+
+app.get("/login", User.unauth("/"), Site.index);
+
+//app.get("/*", Site.index);
+
+app.listen(process.env.PORT, () => console.log(`Server is running on port ${process.env.PORT}`));

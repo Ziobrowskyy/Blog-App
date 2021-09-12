@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import MiddlewareFunction from "data/MiddlewareFunction";
+import { NextFunction, Request, Response } from "express";
 import { STRING } from "../data/String";
 
 export interface SessionInterface {
@@ -44,15 +45,10 @@ export default class Session implements SessionInterface {
 
         for (const field of fields) {
 
-            if (this.has(field)) {
+            if (!this.has(field)) 
+                throw new Error();
 
-                this.createField(field);
-
-                continue;
-
-            }
-
-            throw new Error();
+            this.createField(field);
 
         }
 
@@ -83,6 +79,20 @@ export default class Session implements SessionInterface {
         delete this.request.cookies[name];
 
         this.response.cookie(name, STRING.Empty, { expires: new Date(), ...Session.settings });
+
+    }
+
+    public static init() : MiddlewareFunction {
+
+        return (req : Request, res : Response, next : NextFunction) => {
+
+            req.Session = new Session(req, res);
+
+            req.Session.loadFields(Object.keys(req.cookies));
+
+            next();
+
+        }
 
     }
 

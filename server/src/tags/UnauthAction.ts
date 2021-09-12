@@ -2,7 +2,7 @@ import Auth from "../web/Auth";
 import AppResponse from "../web/AppResponse";
 import Session from "../web/Session";
 
-export default function AuthAction(target : Auth, property : string, descriptor : PropertyDescriptor) {
+export default function UnuthAction(target : Auth, property : string, descriptor : PropertyDescriptor) {
 
     const auth : (Session : Session) => void = descriptor.value;
 
@@ -16,7 +16,7 @@ export default function AuthAction(target : Auth, property : string, descriptor 
 
         } catch {
 
-            this.error(this.unauthorized);
+            new AppResponse(this.response).pass(this.done);
 
         }
 

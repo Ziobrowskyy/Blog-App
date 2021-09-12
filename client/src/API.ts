@@ -11,20 +11,32 @@ interface IApi {
     insertPost: (data: FormData) => Promise<AxiosResponse<NetResponse>>;
     updatePostById: (id: any, data: any) => Promise<AxiosResponse<NetResponse>>
     deletePostById: (id: any) => Promise<AxiosResponse<NetResponse>>;
-    login: (data: any) => Promise<AxiosResponse<NetResponse>>
+    login: (data: any) => Promise<AxiosResponse<NetResponse>>;
+    status: () => Promise<AxiosResponse<NetResponse>>;
 }
 
 export const Api: IApi = {
+
     getAllPosts: () => api.get("/posts"),
+
     getPostById: (id) => api.get("/posts" + id),
+
     insertPost: (data) => api.post("/post", data, {
         headers: {"content-type": "multipart/form-data"}
     }),
+
     updatePostById: (id, data) => api.put("/post/" + id, data, {
         headers: {"content-type": "multipart/form-data"}
     }),
+
     deletePostById: (id) => api.delete("/post/" + id),
+
     login: (data) => api.post("/login", data, {
         headers: {"content-type": "application/json"}
+    }),
+
+    status: () => api.post("/status", {}, {
+        headers: {"content-type": "application/json"}
     })
+
 };
