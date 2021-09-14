@@ -37,7 +37,9 @@ class AdminPanel extends Component<any, IState> {
         // const {title, content, files} = this.state
         const formData = new FormData(event.target as HTMLFormElement)
         const response = await Api.insertPost(formData)
-        console.log(response)
+
+        const form = event.target as HTMLFormElement
+        form.reset()
 
         if(response.status) {
             if(this.titleInputRef.current) {
