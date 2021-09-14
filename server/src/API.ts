@@ -22,7 +22,7 @@ export namespace API {
 
     export async function createPost(req: Request, res: Response) {
         const files: string[] = []
-        const {title, content} = req.params
+        const {title, content} = req.body
 
         if (req.files instanceof Array)
             files.push(...req.files.map(el => el.filename || ""))
