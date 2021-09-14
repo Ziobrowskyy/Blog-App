@@ -3,7 +3,7 @@ import cors from "cors"
 import multer from "multer"
 import {GridFsStorage} from "multer-gridfs-storage"
 import * as Database from "./Database"
-import {API} from "./API"
+import API from "./API"
 import path from "path"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
@@ -64,7 +64,11 @@ Database.init(err => {
     throw(err)
 })
 
+<<<<<<< Updated upstream
 app.post("/api/status", API.status)
+=======
+//app.post("/api/status", API.status);
+>>>>>>> Stashed changes
 
 if (process.env.FILE_SAVE == "DATABASE")
     app.post("/api/post", User.auth(), gridFSImageUpload, API.createPost)

@@ -1,5 +1,6 @@
 import {Collection, GridFSBucket, MongoClient, MongoError} from "mongodb"
 import dotenv from "dotenv"
+import { UserStructure } from "./models/User"
 
 dotenv.config()
 
@@ -16,9 +17,9 @@ const client = new MongoClient(mongoURI + connectionOptions, {
     useUnifiedTopology: true
 })
 
-let postsCollection: Collection<any> | undefined = undefined
-let usersCollection: Collection<any> | undefined = undefined
-let filesCollection: GridFSBucket | undefined = undefined
+let postsCollection: Collection<any>
+let usersCollection: Collection<UserStructure>
+let filesCollection: GridFSBucket
 
 export function init(callback: ((err: MongoError) => void) | undefined = undefined) {
     client.connect((err, db) => {
@@ -39,7 +40,7 @@ export function getPostsCollection(): Collection<any> {
     return postsCollection
 }
 
-export function getUsersCollection(): Collection<any> {
+export function getUsersCollection(): Collection<UserStructure> {
     if (!usersCollection)
         throw new Error("MongoDB collection must be initialized first!")
     return usersCollection

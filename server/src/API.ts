@@ -12,17 +12,27 @@ interface ICacheMap {
 
 const imageCache: ICacheMap = {}
 
-export namespace API {
+export default class API {
 
+<<<<<<< Updated upstream
     export async function status(req: Request, res: Response) {
         const user = await new User({_id: req.Session.uid}).exist()
+=======
+    /*export async function status(req : Request, res : Response) {
+        const user = await new User({ _id: req.Session.uid }).exist();
+>>>>>>> Stashed changes
 
         return new AppResponse(res).load(user, send => send.success(), send => send.error()).json()
-    }
+    }*/
 
+<<<<<<< Updated upstream
     export async function createPost(req: Request, res: Response) {
         const files: string[] = []
         const {title, content} = req.params
+=======
+    static async createPost(req: Request, res: Response) {
+        const files: string[] = [], {title,content} = req.params;
+>>>>>>> Stashed changes
 
         if (req.files instanceof Array)
             files.push(...req.files.map(el => el.filename || ""))
@@ -35,7 +45,7 @@ export namespace API {
         ).json()
     }
 
-    export function updatePost(req: Request, res: Response) {
+    static updatePost(req: Request, res: Response) {
         const {id, content} = req.params
 
         if (!id || !content) {
@@ -48,7 +58,7 @@ export namespace API {
         )
     }
 
-    export async function deletePost(req: Request, res: Response) {
+    static async deletePost(req: Request, res: Response) {
 
         await getPostsCollection().deleteOne({_id: new ObjectID(req.params.id)}).then(
             successResult => new AppResponse(res).success(JSON.stringify(successResult)).json(),
@@ -57,8 +67,13 @@ export namespace API {
 
     }
 
+<<<<<<< Updated upstream
     export async function getPost(req: Request, res: Response) {
         const post = await new Post({_id: req.params.id}).getPost()
+=======
+    static async getPost(req: Request, res: Response) {
+        const post = await new Post({_id: req.params.id}).getPost();
+>>>>>>> Stashed changes
 
         return new AppResponse(res).load(post,
             send => send.success().with(post.dataResult),
@@ -66,8 +81,13 @@ export namespace API {
         ).json()
     }
 
+<<<<<<< Updated upstream
     export async function getAllPosts(req: Request, res: Response) {
         const posts = await new Post().fetchAll()
+=======
+    static async getAllPosts(req: Request, res: Response) {
+        const posts = await new Post().fetchAll();
+>>>>>>> Stashed changes
 
         return new AppResponse(res).load(posts,
             send => send.success().with(posts.dataResult),
@@ -75,7 +95,7 @@ export namespace API {
         ).json()
     }
 
-    export async function getFile(req: Request, res: Response) {
+    static async getFile(req: Request, res: Response) {
         const {filename} = req.params
         const files = await getFilesCollection().find({filename: filename}).toArray()
 
@@ -105,19 +125,30 @@ export namespace API {
         }
     }
 
-    export async function login(req: Request, res: Response) {
-        const {username, password} = req.body
+    static async login(req: Request, res: Response) {
+        const {id,username,password} = req.body
+        console.log(await new User({id,username,password}).login());
+        res.status(200).send('foo')
+        /*const {username, password} = req.body
 
         const user = await new User({username, password}).login()
 
         return new AppResponse(res, req).load(user,
             send => send.success().save("uid", user.dataResult._id),
             send => send.error(user.errorMessage)
+<<<<<<< Updated upstream
         ).json()
     }
 
     export async function logout(req: Request, res: Response) {
         const {Session} = req
+=======
+        ).json();*/
+    }
+
+    static async logout(req: Request, res: Response) {
+        const {Session} = req;
+>>>>>>> Stashed changes
 
         Session.delete("uid")
 
