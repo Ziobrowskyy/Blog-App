@@ -9,7 +9,7 @@
     "start": "nodemon server/out/index.js",
     "client start": "npm run start --prefix ./client",
     "client build": "npm run build --prefix ./client",
-    "lint": "eslint server/** -ext .ts,.tsx"
+    "lint": "eslint"
   },
   "keywords": [],
   "author": "",
