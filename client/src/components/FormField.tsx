@@ -1,48 +1,38 @@
-import React, {ChangeEventHandler, HTMLInputTypeAttribute} from "react"
+import React, {ChangeEventHandler, forwardRef} from "react"
 
-interface IProps {
+interface IProps<T extends (HTMLInputElement | HTMLTextAreaElement)> {
     name?: string
     text: string
-    as?: "input" | "textarea" | "file"
-    type: HTMLInputTypeAttribute,
-    onChange: ChangeEventHandler<HTMLInputElement> | ChangeEventHandler<HTMLTextAreaElement>
+    type?: "text" | "password"
+    onChange: ChangeEventHandler<T>
 }
-
-export default class FormField extends React.Component<IProps> {
-    static defaultProps = {
-        type: "text"
-    }
-
-    RenderByType() {
-        const onChange = this.props.onChange
-        switch (this.props.as) {
-        case("textarea"):
-            return <TextAreaInput name={this.props.name} onChange={onChange as ChangeEventHandler<HTMLTextAreaElement>}/>
-        case("file"):
-            return <FileInput name={this.props.name} onChange={onChange as ChangeEventHandler<HTMLInputElement>}/>
-        case("input"):
-        default:
-            return <DefaultInput name={this.props.name} type={this.props.type} onChange={onChange as ChangeEventHandler<HTMLInputElement>}/>
-        }
-    }
-
-    render() {
-        return (
-            <div className={"form-field"}>
-                <label>
-                    <span>{this.props.text}</span>
-                    {this.RenderByType()}
-                </label>
-            </div>
-        )
-    }
-}
-
-const DefaultInput = (props: { name?: string, type: HTMLInputTypeAttribute, onChange: ChangeEventHandler<HTMLInputElement> }) =>
-    <input name={props.name} type={props.type} onChange={props.onChange}/>
-
-const TextAreaInput = (props: { name?: string, onChange: ChangeEventHandler<HTMLTextAreaElement> }) =>
-    <textarea name={props.name} onChange={props.onChange}/>
-
-const FileInput = (props: { name?: string, onChange: ChangeEventHandler<HTMLInputElement> }) =>
-    <input name={props.name} type={"file"} multiple accept={"image/*"} onChange={props.onChange}/>
+export const FormTextArea = forwardRef<HTMLTextAreaElement, IProps<HTMLTextAreaElement>>((props, ref) =>
+    (
+        <div className={"form-field"}>
+            <label>
+                <span>{props.text}</span>
+                <textarea ref={ref} name={props.name} onChange={props.onChange}/>
+            </label>
+        </div>
+    )
+)
+export const FormTextInput = forwardRef<HTMLInputElement, IProps<HTMLInputElement>>((props, ref) => {
+    return (
+        <div className={"form-field"}>
+            <label>
+                <span>{props.text}</span>
+                <input ref={ref} name={props.name} type={props.type} onChange={props.onChange}/>
+            </label>
+        </div>
+    )
+})
+export const FormFileInput = forwardRef<HTMLInputElement, IProps<HTMLInputElement>>((props, ref) => {
+    return (
+        <div className={"form-field"}>
+            <label>
+                <span>{props.text}</span>
+                <input ref={ref} name={props.name} type={"file"} multiple accept={"image/*"} onChange={props.onChange}/>
+            </label>
+        </div>
+    )
+})
