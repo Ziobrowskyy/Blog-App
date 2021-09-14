@@ -3,12 +3,10 @@ import {NextFunction, Request, Response} from "express"
 import MiddlewareFunction from "../data/MiddlewareFunction"
 import Session from "./Session"
 import AppResponse from "./AppResponse"
-import Base from "../data/Base"
 
-export type AuthObject = new (req: Request, res: Response, next: NextFunction) => Auth;
+export type AuthObject = new (req: Request, res: Response, next: NextFunction) => Auth
 
 export default abstract class Auth {
-
     protected request: Request
     protected response: Response
     protected done: NextFunction

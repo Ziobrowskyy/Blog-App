@@ -8,7 +8,6 @@ export type AdapterTranslator<Entry,Result> = {
 }
 
 export default class ModelAdapter<Entry,Result> {
-
     protected data : Entry;
     protected map : AdapterTranslator<Entry,Result>;
     protected result : Result;
@@ -28,5 +27,4 @@ export default class ModelAdapter<Entry,Result> {
         for (const key in this.data) if (key in this.map) this.result[this.map[key].field] = this.map[key].replacer(this.data[key]);
         return this.result;
     }
-
 }

@@ -5,18 +5,17 @@ import Data from "../data/Data"
 import {DataValue} from "../data/DataValue"
 import {HttpStatus} from "../data/HttpStatus"
 import {STRING} from "../data/String"
-import DataModel from "./DataModel"
+import Model, { ModelStructure } from "./Model"
 
 interface ModelLoadSuccess {
-    (send: AppResponse): void;
+    (send: AppResponse) : void;
 }
 
 interface ModelLoadError {
-    (send: AppResponse): void;
+    (send: AppResponse) : void;
 }
 
 export default class AppResponse {
-
     protected req: Web.Request
     protected res: Web.Response
     protected status: number
@@ -43,38 +42,32 @@ export default class AppResponse {
     public success(message: string = STRING.Empty): AppResponse {
         this.status = HttpStatus.OK
         this.message = message
-
         return this
     }
 
     public error(message: string = STRING.Empty): AppResponse {
         this.status = HttpStatus.BAD_REQUEST
         this.message = message
-
         return this
     }
 
     public with(data: Data | Array<DataValue<Data>>): AppResponse {
         this.data = data
-
         return this
     }
 
     public save(name: string, value: string = STRING.Empty): AppResponse {
         this.req.Session.set(name, value)
-
         return this
     }
 
     public remove(name: string): AppResponse {
         this.req.Session.delete(name)
-
         return this
     }
 
-    public load(model: DataModel, onLoad: ModelLoadSuccess, onError: ModelLoadError): AppResponse {
+    public load<Data,Structure extends ModelStructure>(model: Model<Data,Structure>, onLoad: ModelLoadSuccess, onError: ModelLoadError): AppResponse {
         model.status ? onLoad(this) : onError(this)
-
         return this
     }
 
@@ -84,7 +77,6 @@ export default class AppResponse {
             "message": this.message,
             "data": this.data ? JSON.stringify(this.data) : this.data
         })
-
     }
 
     public html(content: string): void {

@@ -1,41 +1,36 @@
-import { STRING } from "../data/String";
-import { Collection, FilterQuery, ObjectID, OptionalId } from "mongodb"
-import AfterResponse from "../tags/model/AfterResponse";
-import BeforeRequest from "../tags/model/BeforeRequest";
-import ModelAdapter, { AdapterTranslator, Replecer } from "./model/ModelAdapter";
+import { STRING } from "../data/String"
+import { Collection, FilterQuery, ObjectID } from "mongodb"
+import AfterResponse from "../tags/model/AfterResponse"
+import BeforeRequest from "../tags/model/BeforeRequest"
+import ModelAdapter, { AdapterTranslator, Replecer } from "./model/ModelAdapter"
 
 type Setter<Data> = (prop : Data[keyof Data]) => void
 type ModelSetup<Data> = {[ property in keyof Data ] : Setter<Data>}
-
-export interface ModelData {
-    id : string;
-}
+const defaultReplacer = (field : any) => field
 
 export interface ModelStructure {
     _id : ObjectID;
 }
 
-export default abstract class Model<Data extends ModelData, Structure extends ModelStructure> implements ModelData {
+export default abstract class Model<Data, Structure extends ModelStructure> {
     protected abstract collection : Collection<Structure>
     protected translate : AdapterTranslator<Data,Structure>
     protected reverseTranslate : AdapterTranslator<Structure,Data>
     protected setup : ModelSetup<Data>
-    protected status : boolean
-    protected errorMessage : string
 
-    id : string
-    public constructor(id : string) {
-        this.id = id
+    status : boolean
+    errorMessage : string
+    public constructor() {
         this.setup = {} as ModelSetup<Data>
         this.status = true
         this.errorMessage = STRING.Empty
     }
 
-    protected send(property : keyof Data, field : keyof Structure, replacer : Replecer<Data,Structure> = (field : any) => field) : void {
+    protected send(property : keyof Data, field : keyof Structure, replacer : Replecer<Data,Structure> = defaultReplacer) : void {
         this.translate[property] = {field, replacer}
     }
 
-    protected get(property : keyof Structure, field : keyof Data, replacer : Replecer<Structure,Data> = (field : any) => field)  {
+    protected get(property : keyof Structure, field : keyof Data, replacer : Replecer<Structure,Data> = defaultReplacer) {
         this.reverseTranslate[property] = {field,replacer}
         return {set: (setter : Setter<Data>) => this.setup[field] = setter}
     }
@@ -51,13 +46,22 @@ export default abstract class Model<Data extends ModelData, Structure extends Mo
 
     @BeforeRequest
     public save(data : Partial<Data>) : Promise<Model<Data,Structure>> {
-        const filter = new ModelAdapter<Data,Structure>(data).mapping(this.translate).translate(), { _id } = filter;
-        return new Promise(resolve => this.collection.updateOne({_id}, filter, { upsert: true }).then(() => resolve(this)))
+        const filter = new ModelAdapter<Data,Structure>(data).mapping(this.translate).translate(), {_id} = filter;
+        const finder = {_id} as FilterQuery<Structure>
+        return new Promise(resolve => this.collection.findOneAndUpdate(finder,filter,{upsert:true,returnDocument:"after"}).then(result => {
+            if (result.value) this.response(result.value)
+            resolve(this)
+        }))
     }
 
-    public delete() : Promise<Model<Data,Structure>> {
-        const {_id} = new ModelAdapter<Data,Structure>({ id: this.id } as Partial<Data>).mapping(this.translate).translate();
-        return new Promise(resolve => this.collection.deleteOne({_id} as FilterQuery<Structure>).then(() => resolve(this)))
+    @BeforeRequest
+    public delete(data : Partial<Data>) : Promise<Model<Data,Structure>> {
+        const {_id} = new ModelAdapter<Data,Structure>(data).mapping(this.translate).translate();
+        const finder = {_id} as FilterQuery<Structure>
+        return new Promise(resolve => this.collection.findOneAndDelete(finder).then(result => {
+            if (result.value) this.response(result.value)
+            resolve(this)
+        }))
     }
 
     @AfterResponse
@@ -70,7 +74,7 @@ export default abstract class Model<Data extends ModelData, Structure extends Mo
         this.status = true
         return this
     }
-    public error(message : string) {
+    public error(message : string = STRING.Empty) {
         this.status = false
         this.errorMessage = message
         return this

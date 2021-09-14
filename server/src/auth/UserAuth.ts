@@ -15,21 +15,6 @@ export default class User extends Auth {
         this.fields("uid")
     }
 
-<<<<<<< Updated upstream
-    @AuthAction
-    async auth(Session: Session) {
-        const User = await new UserModel({_id: Session.uid}).exist(), {status, errorMessage} = User
-
-        status ? new AppResponse(this.response, this.request).pass(this.done, {User}) : this.error(errorMessage)
-    }
-
-    @UnuthAction
-    async unauth(Session: Session) {
-        const User = await new UserModel({_id: Session.uid}).exist(), {status} = User
-
-        status ?
-            this.error(this.unauthorized) : new AppResponse(this.response).pass(this.done)
-=======
     @AuthAction async auth(Session : Session) {
         /*const User = await new UserModel({ id: Session.uid, username: '', password: '' }).exist(), { status, errorMessage } = User;
         status ? new AppResponse(this.response, this.request).pass(this.done, { User }) :
@@ -42,7 +27,6 @@ export default class User extends Auth {
         status ? this.error(this.authorized) :
             new AppResponse(this.response).pass(this.done);*/
             this.done()
->>>>>>> Stashed changes
     }
 
     static auth = (redirect: string = STRING.Empty) => Auth.set(User, redirect)
