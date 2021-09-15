@@ -1,7 +1,8 @@
-import {getUsersCollection} from "../Database"
+import {getUsers} from "../Database"
 import {Property} from "../data/types/Property"
 import Mediator, {BodyType} from "../web/Mediator"
 import * as bcrypt from "bcrypt"
+import {Collection} from "mongodb"
 
 export interface UserBodyType extends BodyType {
     username: string;
@@ -9,12 +10,13 @@ export interface UserBodyType extends BodyType {
 }
 
 export default class User extends Mediator {
-    protected collection = getUsersCollection()
+    protected collection: Collection<any>
     username: Property<string>
     password: Property<string>
 
     public constructor({_id, username, password}: Partial<UserBodyType>) {
         super(_id)
+        getUsers().then((result) => this.collection = result)
         this.username = username
         this.password = password
     }
