@@ -49,6 +49,14 @@ export namespace API {
     }
 
     export async function deletePost(req: Request, res: Response) {
+        const post = await getPostsCollection().findOne({_id: new ObjectID(req.params.id)})
+        const filesCollection = getFilesCollection()
+
+        post.files.forEach((filename: string) => {
+            filesCollection.find({filename: filename}).forEach(file => {
+                filesCollection.delete(file._id)
+            })
+        })
 
         await getPostsCollection().deleteOne({_id: new ObjectID(req.params.id)}).then(
             successResult => new AppResponse(res).success(JSON.stringify(successResult)).json(),
