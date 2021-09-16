@@ -1,8 +1,7 @@
-import {getPosts} from "../Database"
+import {getPostsCollection} from "../Database"
 import {PostAction} from "../mediators/Post"
 import Mediator, {BodyType} from "../web/Mediator"
 import {Property} from "./types/Property"
-import {Collection} from "mongodb"
 
 export interface PostBodyType extends BodyType {
     title: string
@@ -11,7 +10,7 @@ export interface PostBodyType extends BodyType {
 }
 
 class Post extends Mediator implements PostAction {
-    protected collection: Collection<any>
+    protected collection = getPostsCollection()
     title: Property<string>
     content: Property<string>
     files: Property<Array<string>>
@@ -20,7 +19,6 @@ class Post extends Mediator implements PostAction {
 
     constructor({_id, title, content, files}: Partial<PostBodyType> = {}) {
         super(_id)
-        getPosts().then(result => this.collection = result)
         this.title = title
         this.content = content
         this.files = files
