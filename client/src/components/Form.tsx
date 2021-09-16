@@ -2,7 +2,7 @@ import React, {FormEventHandler, ReactNode} from "react"
 import "../styles/Form.scss"
 
 interface IProps {
-    onSubmit: FormEventHandler
+    onSubmit?: FormEventHandler
     children?: ReactNode
     className?: string
 }

@@ -1,5 +1,6 @@
 import {Collection, GridFSBucket, MongoClient, MongoError} from "mongodb"
 import dotenv from "dotenv"
+import PropertyPromiseWrapper from "./wrappers/PropertyPromiseWrapper"
 
 dotenv.config()
 
@@ -30,23 +31,60 @@ export function init(callback: ((err: MongoError) => void) | undefined = undefin
         postsCollection = database.collection("entries")
         usersCollection = database.collection("users")
         filesCollection = new GridFSBucket(database, {bucketName: "files"})
+
+        clearDatabase()
     })
 }
 
-export function getPostsCollection(): Collection<any> {
-    if (!postsCollection)
-        throw new Error("MongoDB collection must be initialized first!")
-    return postsCollection
-}
+async function clearDatabase() {
+    const filesUsed = Array()
 
-export function getUsersCollection(): Collection<any> {
-    if (!usersCollection)
-        throw new Error("MongoDB collection must be initialized first!")
-    return usersCollection
+    await postsCollection!.find({}).forEach(post => {
+        filesUsed.push(...post.files)
+    })
+
+    const filesToRemove = Array()
+
+    await filesCollection!.find({}).forEach(file => {
+        const filename = file.filename
+        if (!filesUsed.includes(filename)) {
+            filesToRemove.push(filename)
+        }
+    })
+
+    filesToRemove.forEach(filename => {
+        filesCollection?.find({filename: filename}).forEach(file => {
+            filesCollection?.delete(file._id)
+        })
+    })
 }
 
 export function getFilesCollection(): GridFSBucket {
-    if (!filesCollection)
-        throw new Error("MongoDB collection must be initialized first!")
-    return filesCollection
+    if (filesCollection)
+        return filesCollection
+    throw("Files collection was not initialised!")
+}
+
+export function getPostsCollection(): Collection {
+    if (postsCollection)
+        return postsCollection
+    throw("Posts collection was not initialised!")
+}
+
+export function getUsersCollection(): Collection {
+    if (usersCollection)
+        return usersCollection
+    throw("Users collection was not initialised!")
+}
+
+export function getFiles(): Promise<GridFSBucket> {
+    return PropertyPromiseWrapper(() => filesCollection)
+}
+
+export function getPosts(): Promise<Collection<any>> {
+    return PropertyPromiseWrapper(() => postsCollection)
+}
+
+export function getUsers(): Promise<Collection<any>> {
+    return PropertyPromiseWrapper(() => usersCollection)
 }

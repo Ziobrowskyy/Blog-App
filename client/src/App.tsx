@@ -7,8 +7,10 @@ import AdminPanel from "./components/AdminPanel"
 import About from "./components/About"
 import PageNotFound from "./components/PageNotFound"
 import Login from "./components/Login"
+import {API} from "./API"
+import Register from "./components/Register"
 import "./styles/App.scss"
-import {Api} from "./API"
+import Logout from "./components/Logout"
 
 const history = createBrowserHistory()
 
@@ -20,7 +22,10 @@ export default function App() {
         checkLoginStatus()
     }
 
-    const checkLoginStatus = () => Api.status().then(() => setLoggedIn(true)).catch(() => setLoggedIn(false))
+    const onRegister = () => {
+        history.replace("/register")
+    }
+    const checkLoginStatus = () => API.status().then(() => setLoggedIn(true)).catch(() => setLoggedIn(false))
 
     checkLoginStatus()
 
@@ -33,7 +38,9 @@ export default function App() {
                         <Route exact path={"/"} component={() => <PostsList/>}/>
                         <Route exact path={"/about"} component={() => <About/>}/>
                         <Route exact path={"/admin-panel"} component={() => <AdminPanel/>}/>
-                        <Route exact path={"/login"} component={() => <Login onLogin={onLogin}/>}/>
+                        <Route exact path={"/login"} component={() => <Login onLogin={onLogin} onRegister={onRegister}/>}/>
+                        <Route exact path={"/logout"} component={() => <Logout onLogin={onLogin}/>}/>
+                        <Route exact path={"/register"} component={() => <Register onRegister={onLogin}/>}/>
                         <Route exact path={"*"} component={() => <PageNotFound/>}/>
                     </Switch>
                 </div>

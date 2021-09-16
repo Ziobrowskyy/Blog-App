@@ -36,16 +36,19 @@ export default class Header extends Component<IProps, IState> {
                     <img src={logoImg} alt={"brand logo"}/>
                     {/*<span className={"name"}>Company name</span>*/}
                 </div>
-                <hr/>
+                <div className={"hr"}/>
                 <div className={"navbar"}>
                     <Link to={"/"}>Home</Link>
                     <Link to={"/about"}>About</Link>
-                    {isLoggedIn ?
-                        <Link to={"/admin-panel"}>Admin panel</Link> :
-                        <Link to={"/login"}>Login</Link>
+                    {!isLoggedIn ?
+                        <Link to={"/login"}>Login</Link> :
+                        (<>
+                            <Link to={"/admin-panel"}>Admin panel</Link>
+                            <Link to={"/logout"}>Logout</Link>
+                        </>)
                     }
                 </div>
-                <hr/>
+                <div className={"hr"}/>
 
                 <div className={"media-wrapper"}>
                     <span>Find us on:</span>

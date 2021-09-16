@@ -1,9 +1,11 @@
 import React, {FormEventHandler, MouseEventHandler} from "react"
 
+export type ButtonType = "submit" | "reset" | "button"
+
 interface IProps {
     variant: "primary" | "secondary"
     children: string
-    type: "submit" | "reset" | "button"
+    type: ButtonType
     onSubmit?: FormEventHandler<HTMLButtonElement>
     onClick?: MouseEventHandler<HTMLButtonElement>
 }

@@ -1,7 +1,7 @@
 import {Request, Response} from "express"
 import {ObjectID} from "mongodb"
 import {Readable} from "stream"
-import {getFilesCollection, getPostsCollection} from "./Database"
+import {getFiles, getPosts} from "./Database"
 import Post from "./data/Post"
 import AppResponse from "./web/AppResponse"
 import User from "./models/User"
@@ -35,22 +35,32 @@ export namespace API {
         ).json()
     }
 
-    export function updatePost(req: Request, res: Response) {
+    export async function updatePost(req: Request, res: Response) {
         const {id, content} = req.params
+        const postsCollection = await getPosts()
 
         if (!id || !content) {
             return new AppResponse(res).error("Missing body parameters").json()
         }
 
-        getPostsCollection().updateOne({_id: id}, {content}).then(
+        postsCollection.updateOne({_id: id}, {content}).then(
             successResult => new AppResponse(res).success(JSON.stringify(successResult)).json(),
             failMessage => new AppResponse(res).error(`Failed to delete document. ${failMessage}`).json()
         )
     }
 
     export async function deletePost(req: Request, res: Response) {
+        const postsCollection = await getPosts()
+        const post = await postsCollection.findOne({_id: new ObjectID(req.params.id)})
+        const filesCollection = await getFiles()
 
-        await getPostsCollection().deleteOne({_id: new ObjectID(req.params.id)}).then(
+        post.files.forEach((filename: string) => {
+            filesCollection.find({filename: filename}).forEach(file => {
+                filesCollection.delete(file._id)
+            })
+        })
+
+        await postsCollection.deleteOne({_id: new ObjectID(req.params.id)}).then(
             successResult => new AppResponse(res).success(JSON.stringify(successResult)).json(),
             failMessage => new AppResponse(res).error(`Failed to delete document. ${failMessage}`).json()
         )
@@ -77,7 +87,8 @@ export namespace API {
 
     export async function getFile(req: Request, res: Response) {
         const {filename} = req.params
-        const files = await getFilesCollection().find({filename: filename}).toArray()
+        const filesCollection = await getFiles()
+        const files = await filesCollection.find({filename: filename}).toArray()
 
         if (files.length == 0)
             new AppResponse(res).error("Failed to find file").json()
@@ -88,7 +99,7 @@ export namespace API {
             if (imageCache.hasOwnProperty(filename))
                 stream = imageCache[filename]
             else
-                stream = getFilesCollection().openDownloadStreamByName(filename)
+                stream = filesCollection.openDownloadStreamByName(filename)
 
             res.header("transfer-encoding", "chunked")
 
