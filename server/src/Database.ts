@@ -59,6 +59,24 @@ async function clearDatabase() {
     })
 }
 
+export function getFilesCollection(): GridFSBucket {
+    if (filesCollection)
+        return filesCollection
+    throw("Files collection was not initialised!")
+}
+
+export function getPostsCollection(): Collection {
+    if (postsCollection)
+        return postsCollection
+    throw("Posts collection was not initialised!")
+}
+
+export function getUsersCollection(): Collection {
+    if (usersCollection)
+        return usersCollection
+    throw("Users collection was not initialised!")
+}
+
 export function getFiles(): Promise<GridFSBucket> {
     return PropertyPromiseWrapper(() => filesCollection)
 }
