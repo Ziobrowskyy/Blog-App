@@ -62,13 +62,14 @@ export default class Carousel extends Component<IProps, IState> {
         const {currentImage, currentIndex} = this.state
         const childrenCount = this.state.children.length
         const indicators = [...Array(childrenCount)].map((__, i) => {
-                return (i == currentIndex) ?
+                return (i === currentIndex) ?
                     <img src={indicatorFull} alt={"Indicator full"}/> :
                     <img src={indicatorEmpty} alt={"Indicator empty"}/>
             }
         )
 
         return (
+
             <div className={"carousel"}>
                 <CSSTransition
                     key={currentIndex}
@@ -79,7 +80,7 @@ export default class Carousel extends Component<IProps, IState> {
                 >
                     {currentImage}
                 </CSSTransition>
-                {childrenCount != 1 &&
+                {childrenCount !== 1 &&
                 <div className={"controls"}>
                     <div className={"arrows"}>
                         <img src={arrowLeft} alt={"Arrow left"} onClick={this.prevImage}/>
