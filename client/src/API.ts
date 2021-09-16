@@ -12,11 +12,12 @@ interface IApi {
     updatePostById: (id: string, data: any) => Promise<AxiosResponse<NetResponse>>
     deletePostById: (id: string) => Promise<AxiosResponse<NetResponse>>;
     login: (data: { username: string, password: string }) => Promise<AxiosResponse<NetResponse>>
+    logout: () => Promise<AxiosResponse<NetResponse>>
     register: (data: { username: string, password: string }) => Promise<AxiosResponse<NetResponse>>
     status: () => Promise<AxiosResponse<NetResponse>>;
 }
 
-export const Api: IApi = {
+export const API: IApi = {
     getAllPosts: () => api.get("/posts"),
 
     getPostById: (id) => api.get("/posts" + id),
@@ -34,6 +35,8 @@ export const Api: IApi = {
     login: (data) => api.post("/login", data, {
         headers: {"content-type": "application/json"}
     }),
+
+    logout: () => api.post("/logout"),
 
     register: (data) => api.post
     ("/register", data, {
