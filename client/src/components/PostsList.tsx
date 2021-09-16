@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {Api} from "../API"
+import {API} from "../API"
 import {Post, PostData} from "./Post"
 import {Alert, Container} from "react-bootstrap"
 import HttpRequest from "../decorators/HttpRequest"
@@ -28,12 +28,12 @@ export default class PostsList extends Component<any, IState> {
     }
 
     componentDidMount = () => {
-        Api.getAllPosts().then(result => {
+        API.getAllPosts().then(result => {
             this.setState({
                 data: JSON.parse(result.data.data),
                 status: Status.success
             })
-        }).catch(errorMessage => {
+        }).catch(__ => {
             this.setState({
                 //data: JSON.stringify(errorMessage),
                 status: Status.fail
@@ -44,7 +44,7 @@ export default class PostsList extends Component<any, IState> {
 
     @HttpRequest
     protected async removePost(id: string) {
-        const response = await Api.deletePostById(id)
+        const response = await API.deletePostById(id)
 
         if (response.data.success) {
             const data = this.state.data.filter(data => data._id !== id)
