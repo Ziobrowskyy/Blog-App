@@ -1,0 +1,33 @@
+.alert {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  &-warn {
+    background-color: #ff3c3c;
+  }
+
+  &-alert {
+    background-color: #c4c472;
+  }
+
+  &-info {
+    background-color: #dbdbdb;
+  }
+
+  &-success {
+    background-color: #3dff3d;
+  }
+
+  .controls {
+    .button-dismiss {
+      all: unset;
+      display: block;
+      border-radius: 100%;
+      font-weight: bold;
+      &:hover {
+        cursor: pointer;
+        font-weight: bolder;
+      }
+    }
+  }
+}
