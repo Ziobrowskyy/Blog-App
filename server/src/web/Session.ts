@@ -71,7 +71,6 @@ export default class Session implements SessionInterface {
         return (req: Request, res: Response, next: NextFunction) => {
             req.Session = new Session(req, res)
             req.Session.loadFields(Object.keys(req.cookies))
-
             next()
         }
     }

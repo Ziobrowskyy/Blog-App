@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 import multer from "multer"
 import {GridFsStorage} from "multer-gridfs-storage"
-import * as Database from "./Database"
+import Database from "./Database"
 import API from "./API"
 import path from "path"
 import dotenv from "dotenv"
@@ -59,10 +59,7 @@ const gridFSStorage = new GridFsStorage({
 const localImageUpload = multer({storage: localStorage}).array("files")
 const gridFSImageUpload = multer({storage: gridFSStorage}).array("files")
 
-Database.init(err => {
-    console.warn("Failed to connect to database!")
-    throw(err)
-})
+Database.init().catch(reason => process.exit(reason))
 
 //app.post("/api/status", API.status);
 
@@ -93,6 +90,4 @@ app.get("/login", User.unauth("/"), Site.index)
 
 //app.get("/*", Site.index);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`)
-})
+app.listen(process.env.PORT, () => console.log(`Server is running on port ${process.env.PORT}`))

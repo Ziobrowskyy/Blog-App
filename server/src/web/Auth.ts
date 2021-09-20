@@ -10,8 +10,8 @@ export default abstract class Auth {
     protected request: Request
     protected response: Response
     protected done: NextFunction
-    protected authorized: string = "Authorized"
-    protected unauthorized: string = "Unauthorized"
+    protected authorized = "Authorized"
+    protected unauthorized = "Unauthorized"
     protected redirect: string
 
     public constructor(request: Request, response: Response, done: NextFunction) {

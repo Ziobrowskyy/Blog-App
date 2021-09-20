@@ -1,4 +1,4 @@
-export type Replecer<Entry,Result> = (key : Entry[keyof Entry]) => Result[keyof Result]
+export type Replecer<Entry,Result> = (key : any) => Result[keyof Result]
 
 export type AdapterTranslator<Entry,Result> = {
     [dataField in keyof Entry] : {
@@ -19,12 +19,12 @@ export default class ModelAdapter<Entry,Result> {
     }
 
     public mapping(map : AdapterTranslator<Entry,Result>) : ModelAdapter<Entry,Result> {
-        this.map = map;
-        return this;
+        this.map = map
+        return this
     }
 
     public translate() : Result {
-        for (const key in this.data) if (key in this.map) this.result[this.map[key].field] = this.map[key].replacer(this.data[key]);
-        return this.result;
+        for (const key in this.data) if (key in this.map) this.result[this.map[key].field] = this.map[key].replacer(this.data[key])
+        return this.result
     }
 }

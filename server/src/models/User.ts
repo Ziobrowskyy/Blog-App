@@ -1,8 +1,8 @@
-import { getUsersCollection } from "../Database";
-import * as bcrypt from "bcrypt";
-import Model,{ ModelStructure } from "../web/Model";
-import { ObjectID } from "mongodb";
-import { STRING } from "../data/String";
+import DataBase from "../Database"
+import * as bcrypt from "bcrypt"
+import Model,{ ModelStructure } from "../web/Model"
+import { ObjectID } from "mongodb"
+import { STRING } from "../data/String"
 
 export interface UserData {
     uid : string;
@@ -16,13 +16,13 @@ export interface UserStructure extends ModelStructure {
 }
 
 export default class User extends Model<UserData,UserStructure> implements UserData {
-    protected collection = getUsersCollection();
+    protected collection = DataBase.users;
     
     uid : string;
     username : string;
     password : string;
     public constructor({ uid, username, password } : Partial<UserData> = {}) {
-        super();
+        super()
         this.uid = uid || STRING.Empty
         this.username = username || STRING.Empty
         this.password = password || STRING.Empty
@@ -50,19 +50,25 @@ export default class User extends Model<UserData,UserStructure> implements UserD
 
     public async login() : Promise<User> {
         const {username} = this
-        await this.find({username})
-        if (this.password)
+        if (await this.findStatus({username}) && this.password)
             return this.success
         return this.error("Error")
     }
 
     public async register() : Promise<User> {
         const {username,password} = this
-        await this.find({username})
-        if (this.uid) 
+        if (await this.findStatus({username}) && this.uid) 
             return this.error("User already exist")
-        await this.save({username,password})
+        if (!await this.saveStatus({username,password})) 
+            return this.error("Cannot create user")
         return this.success
+    }
+
+    public async exist() : Promise<User> {
+        const {uid} = this
+        if (await this.findStatus({uid}))
+            return this.success
+        return this.error("User doesn't exist")
     }
 
 }

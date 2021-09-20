@@ -5,32 +5,35 @@ import AppResponse from "../web/AppResponse"
 import {STRING} from "../data/String"
 import Session from "../web/Session"
 import UnuthAction from "../tags/UnauthAction"
+import MiddlewareFunction from "data/MiddlewareFunction"
 
 export default class User extends Auth {
 
-    protected authorized: string = "You cannot make this action while you're logged user."
-    protected unauthorized: string = "Access denied"
+    protected authorized = "You cannot make this action while you're logged user."
+    protected unauthorized = "You must be logged user"
 
-    public init() {
+    public init() : void {
         this.fields("uid")
     }
 
-    @AuthAction async auth(Session : Session) {
-        /*const User = await new UserModel({ id: Session.uid, username: '', password: '' }).exist(), { status, errorMessage } = User;
-        status ? new AppResponse(this.response, this.request).pass(this.done, { User }) :
-            this.error(errorMessage)*/
-            this.done()
+    @AuthAction async auth({uid} : Session) : Promise<AppResponse> {
+        const user = await new UserModel({uid}).exist()
+        return new AppResponse(this.response,this.request).load(user,
+            send => send.pass(this.done),
+            send => send.error(this.unauthorized)
+        )
     }
 
-    @UnuthAction async unauth(Session : Session) {
-        /*const User = await new UserModel({ _id: Session.uid }).exist(), { status } = User;
-        status ? this.error(this.authorized) :
-            new AppResponse(this.response).pass(this.done);*/
-            this.done()
+    @UnuthAction async unauth({uid} : Session) : Promise<AppResponse> {
+        const user = await new UserModel({uid}).exist()
+        return new AppResponse(this.response,this.request).load(user,
+            send => send.error(this.authorized),
+            send => send.pass(this.done)
+        )
     }
 
-    static auth = (redirect: string = STRING.Empty) => Auth.set(User, redirect)
+    static auth = (redirect: string = STRING.Empty) : MiddlewareFunction => Auth.set(User, redirect)
 
-    static unauth = (redirect: string = STRING.Empty) => Auth.unset(User, redirect)
+    static unauth = (redirect: string = STRING.Empty) : MiddlewareFunction => Auth.unset(User, redirect)
 
 }

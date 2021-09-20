@@ -30,7 +30,7 @@ export default class AppResponse {
         this.data = {}
     }
 
-    public pass(next: Web.NextFunction, data: Base = {}) {
+    public pass(next: Web.NextFunction, data: Base = {}) : void {
         Object.keys(data).map(key => this.req.Session[key] = data[key])
         next()
     }
@@ -39,14 +39,14 @@ export default class AppResponse {
         this.res.redirect(path)
     }
 
-    public success(message: string = STRING.Empty): AppResponse {
-        this.status = HttpStatus.OK
+    public success(message: string = STRING.Empty, status : HttpStatus = HttpStatus.OK): AppResponse {
+        this.status = status
         this.message = message
         return this
     }
 
-    public error(message: string = STRING.Empty): AppResponse {
-        this.status = HttpStatus.BAD_REQUEST
+    public error(message: string = STRING.Empty, status : HttpStatus = HttpStatus.BAD_REQUEST): AppResponse {
+        this.status = status
         this.message = message
         return this
     }
@@ -68,6 +68,11 @@ export default class AppResponse {
 
     public load<Data,Structure extends ModelStructure>(model: Model<Data,Structure>, onLoad: ModelLoadSuccess, onError: ModelLoadError): AppResponse {
         model.status ? onLoad(this) : onError(this)
+        return this
+    }
+
+    public multiLoad<Data,Structure extends ModelStructure>(models : Array<Model<Data,Structure>>, onLoad: ModelLoadSuccess, onError: ModelLoadError) : AppResponse {
+        models.filter(model => model.status).length === models.length ? onLoad(this) : onError(this)
         return this
     }
 
