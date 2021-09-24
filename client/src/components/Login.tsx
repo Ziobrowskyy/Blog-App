@@ -35,15 +35,7 @@ export default class Login extends Component<IProps, IState> {
         e.preventDefault()
         const {username, password, action} = this.state
 
-        let response
-        if (action == ActionType.LOGIN) {
-            console.log("Login")
-            response = await Api.login({username, password})
-        } else {
-            console.log("Register")
-            response = await Api.register({username, password})
-        }
-
+        const response = action === ActionType.LOGIN ? await Api.login({username, password}) : await Api.register({username, password})
         console.log(response)
         if (response.data.success) {
             this.props.onLogin()

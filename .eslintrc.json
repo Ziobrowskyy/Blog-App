@@ -9,6 +9,7 @@
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended"
     ],
+    "ignorePatterns": ["jest.config.ts", "server/out/*", "server/@types/*"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -41,7 +42,7 @@
     },
     "overrides": [
         {
-            "files": ["server/src/*.ts", "client/src/*.tsx"]
+            "files": ["server/src/*.ts", "client/src/*.tsx", "server/tests/*.test.ts"]
         }
     ]
 }

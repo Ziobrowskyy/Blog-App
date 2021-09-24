@@ -14,6 +14,17 @@ const imageCache: ICacheMap = {}
 
 export default class API {
 
+    static async status(req: Request, res: Response) : Promise<void> {
+        const {uid} = req.Session
+        if (!uid)
+            return new AppResponse(res).error("You are not logged").json()
+        const user = await new User({uid}).exist()
+        return new AppResponse(res).load(user,
+            send => send.success(),
+            send => send.error("You are not logged")
+        ).json()
+    }
+
     static async createPost(req: Request, res: Response) : Promise<void> {
         const {title,content} = req.params
         const files = new Files(req).names
@@ -63,25 +74,13 @@ export default class API {
         ).json()
     }
 
-    static async getFile(req: Request, res: Response) {
+    static async getFile(req: Request, res: Response) : Promise<void> {
         const {filename} = req.params
         const files = await DataBase.files.find({filename}).toArray()
         if (files.length == 0)
             return new AppResponse(res).error("Failed to find file").json()
         const stream: Readable = filename in imageCache ? imageCache[filename] : DataBase.files.openDownloadStreamByName(filename)
-        const readable = new Readable()
-
-        res.header("transfer-encoding", "chunked")
-        stream.on("data", (chunk) => {
-            readable.push(chunk)
-            res.write(chunk)
-        })
-        stream.on("end", () => {
-            readable.push(null)
-            imageCache[filename] = readable
-            res.end()
-        })
-        
+        return new AppResponse(res).stream(stream, readable => imageCache[filename] = readable)
     }
 
     static async login(req: Request, res: Response) : Promise<void> {

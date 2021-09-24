@@ -1,11 +1,12 @@
-import Base from "../data/Base"
+import Base from "../data/interfaces/Base"
 import * as Web from "express"
 import {join} from "path"
-import Data from "../data/Data"
-import {DataValue} from "../data/DataValue"
-import {HttpStatus} from "../data/HttpStatus"
-import {STRING} from "../data/String"
+import Data from "../data/interfaces/Data"
+import {DataValue} from "../data/types/DataValue"
+import {HttpStatus} from "../data/enums/HttpStatus"
+import {STRING} from "../data/enums/String"
 import Model, { ModelStructure } from "./Model"
+import { Readable } from "stream"
 
 interface ModelLoadSuccess {
     (send: AppResponse) : void;
@@ -74,6 +75,20 @@ export default class AppResponse {
     public multiLoad<Data,Structure extends ModelStructure>(models : Array<Model<Data,Structure>>, onLoad: ModelLoadSuccess, onError: ModelLoadError) : AppResponse {
         models.filter(model => model.status).length === models.length ? onLoad(this) : onError(this)
         return this
+    }
+
+    public stream(stream : Readable, onFinish? : (readable : Readable) => void) : void {
+        const readable = new Readable()
+        this.res.header("transfer-encoding", "chunked")
+        stream.on("data", data => {
+            readable.push(data)
+            this.res.send(data)
+        })
+        stream.on("end", () => {
+            readable.push(null)
+            if (onFinish) onFinish(readable)
+            this.res.end()
+        })
     }
 
     public json(): void {

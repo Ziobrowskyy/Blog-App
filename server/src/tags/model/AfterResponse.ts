@@ -1,4 +1,4 @@
-import { AdapterTranslator } from "../../web/model/ModelAdapter"
+import { AdapterTranslator } from "../../helpers/model/ModelAdapter"
 import Model, {  ModelStructure } from "../../web/Model"
 
 export default function AfterResponse<Data,Structure extends ModelStructure>(target : Model<Data,Structure>, property : string, descriptor : PropertyDescriptor) : void {

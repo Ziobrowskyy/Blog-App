@@ -1,8 +1,8 @@
-import { STRING } from "../data/String"
+import { STRING } from "../data/enums/String"
 import { Collection, FilterQuery, ObjectID } from "mongodb"
 import AfterResponse from "../tags/model/AfterResponse"
 import BeforeRequest from "../tags/model/BeforeRequest"
-import ModelAdapter, { AdapterTranslator, Replecer } from "./model/ModelAdapter"
+import ModelAdapter, { AdapterTranslator, Replecer } from "../helpers/model/ModelAdapter"
 
 type Setter = (prop : any) => void
 type ModelSetup<Data> = {[ property in keyof Data ] : Setter}

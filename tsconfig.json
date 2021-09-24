@@ -35,8 +35,8 @@
       "web": [ "./server/src/web" ]
     },
     "typeRoots": [
-      "./server/types/session",
-      "./server/types/user-auth",
+      "server/@types/session",
+      "server/@types/user-auth",
       "./node_modules/@types"
     ]
   },

@@ -1,9 +1,9 @@
-import User from "../../../src/models/User";
+import Session from "../../../src/web/Session"
 
 declare global {
     namespace Express {
         interface Request {
-            User: User
+            Session : Session;
         }
     }
 }

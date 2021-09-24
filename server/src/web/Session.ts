@@ -1,6 +1,6 @@
-import MiddlewareFunction from "data/MiddlewareFunction"
+import MiddlewareFunction from "data/interfaces/MiddlewareFunction"
 import {NextFunction, Request, Response} from "express"
-import {STRING} from "../data/String"
+import {STRING} from "../data/enums/String"
 
 export interface SessionInterface {
     loadFields(fields: Array<string>): void

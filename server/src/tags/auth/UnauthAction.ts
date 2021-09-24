@@ -1,6 +1,6 @@
-import Auth from "../web/Auth"
-import AppResponse from "../web/AppResponse"
-import Session from "../web/Session"
+import Auth from "../../web/Auth"
+import AppResponse from "../../web/AppResponse"
+import Session from "../../web/Session"
 
 export default function UnuthAction(target: Auth, property: string, descriptor: PropertyDescriptor) : void {
     const auth: (Session: Session) => void = descriptor.value

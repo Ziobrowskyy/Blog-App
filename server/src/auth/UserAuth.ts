@@ -1,11 +1,11 @@
-import AuthAction from "../tags/AuthAction"
+import AuthAction from "../tags/auth/AuthAction"
 import Auth from "../web/Auth"
 import UserModel from "../models/User"
 import AppResponse from "../web/AppResponse"
-import {STRING} from "../data/String"
+import {STRING} from "../data/enums/String"
 import Session from "../web/Session"
-import UnuthAction from "../tags/UnauthAction"
-import MiddlewareFunction from "data/MiddlewareFunction"
+import UnuthAction from "../tags/auth/UnauthAction"
+import MiddlewareFunction from "../data/interfaces/MiddlewareFunction"
 
 export default class User extends Auth {
 
@@ -20,14 +20,14 @@ export default class User extends Auth {
         const user = await new UserModel({uid}).exist()
         return new AppResponse(this.response,this.request).load(user,
             send => send.pass(this.done),
-            send => send.error(this.unauthorized)
+            send => this.redirect ? send.redirect(this.redirect) : send.error(this.unauthorized).json()
         )
     }
 
     @UnuthAction async unauth({uid} : Session) : Promise<AppResponse> {
         const user = await new UserModel({uid}).exist()
         return new AppResponse(this.response,this.request).load(user,
-            send => send.error(this.authorized),
+            send => this.redirect ? send.redirect(this.redirect) : send.error(this.authorized).json(),
             send => send.pass(this.done)
         )
     }

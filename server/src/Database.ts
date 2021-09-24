@@ -5,12 +5,11 @@ import { PostStructure } from "models/Post"
 
 dotenv.config()
 
-
 export default class DataBase {
-    protected static node : DataBase = new DataBase()
     protected static uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.bolnn.mongodb.net`
     protected static connectionOptions = "?retryWrites=true&w=majority"
     protected static dbName = "blog-app"
+    protected static node : DataBase = new DataBase()
 
     protected client : MongoClient
     protected postsCollection : Collection<PostStructure>
@@ -23,16 +22,16 @@ export default class DataBase {
         })
     }
 
+    public static get mongoURI() : string {
+        return `${DataBase.uri}/${DataBase.dbName}`
+    }
+
     public async init() : Promise<void> {
         const db = await this.client.connect()
         const database = db.db(DataBase.dbName)
         this.postsCollection = database.collection("entries")
         this.usersCollection = database.collection("users")
         this.filesCollection = new GridFSBucket(database, {bucketName: "files"})
-    }
-
-    public static get mongoURI() : string {
-        return `${DataBase.uri}/${DataBase.dbName}`
     }
 
     public static get posts() : Collection<PostStructure> {

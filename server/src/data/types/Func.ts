@@ -1,0 +1,1 @@
+export type Func = (...args : Array<any>) => any

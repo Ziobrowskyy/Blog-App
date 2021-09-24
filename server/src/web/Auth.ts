@@ -1,6 +1,6 @@
-import {STRING} from "../data/String"
+import {STRING} from "../data/enums/String"
 import {NextFunction, Request, Response} from "express"
-import MiddlewareFunction from "../data/MiddlewareFunction"
+import MiddlewareFunction from "../data/interfaces/MiddlewareFunction"
 import Session from "./Session"
 import AppResponse from "./AppResponse"
 

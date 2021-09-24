@@ -1,5 +1,5 @@
-import Auth from "../web/Auth"
-import Session from "../web/Session"
+import Auth from "../../web/Auth"
+import Session from "../../web/Session"
 
 export default function AuthAction(target: Auth, property: string, descriptor: PropertyDescriptor) : void {
     const auth: (Session: Session) => void = descriptor.value

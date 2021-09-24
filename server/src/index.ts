@@ -61,7 +61,7 @@ const gridFSImageUpload = multer({storage: gridFSStorage}).array("files")
 
 Database.init().catch(reason => process.exit(reason))
 
-//app.post("/api/status", API.status);
+app.post("/api/status", API.status)
 
 if (process.env.FILE_SAVE == "DATABASE")
     app.post("/api/post", User.auth(), gridFSImageUpload, API.createPost)

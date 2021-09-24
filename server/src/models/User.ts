@@ -2,7 +2,7 @@ import DataBase from "../Database"
 import * as bcrypt from "bcrypt"
 import Model,{ ModelStructure } from "../web/Model"
 import { ObjectID } from "mongodb"
-import { STRING } from "../data/String"
+import { STRING } from "../data/enums/String"
 
 export interface UserData {
     uid : string;

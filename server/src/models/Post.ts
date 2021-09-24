@@ -1,7 +1,7 @@
 import { ObjectID } from "mongodb"
-import { STRING } from "data/String"
-import DataBase from "Database"
-import Model, { ModelStructure } from "web/Model"
+import { STRING } from "../data/enums/String"
+import DataBase from "../Database"
+import Model, { ModelStructure } from "../web/Model"
 
 export interface PostData {
     id : string
