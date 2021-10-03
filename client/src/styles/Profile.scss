@@ -1,0 +1,136 @@
+@import "./FontAwesome/scss/fontawesome.scss";
+@import "./FontAwesome/scss/solid.scss";
+@import "./FontAwesome/scss/brands.scss";
+
+.profile-container {
+    width: 100%;
+    margin: 0 4rem;
+    @media only screen and (max-width: 480px) {
+        margin: 0;
+    }
+    .profile-shadow {
+        height: 100%;
+        background: #FFFFFF;
+        box-shadow: 0 0 2rem #333;
+        .profile-content {
+            padding: 2rem 2rem;
+            @media only screen and (max-width: 480px) {
+                padding: 0;
+            }
+            .profile-person {
+                .profile-person-container {
+                    display: flex;
+                    margin: 4rem 0;
+                    @media only screen and (max-width: 480px) {
+                        margin: 0;
+                    }
+                    .profile-person-image-wrapper {
+                        margin: 0 2rem;
+                        padding: 6px;
+                        background: linear-gradient(#9F24FF, #FF249F);
+                        border-radius: 50%;
+                        .profile-person-image {
+                            height: 300px;
+                            border-radius: 50%;
+                        }
+                    }
+                    @media only screen and (max-width: 480px) {
+                        .profile-person-image-desktop {
+                            display: none;
+                        }
+                    }
+                    .profile-person-info {
+                        flex: 1;
+                        margin: 0 2rem;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        @media only screen and (max-width: 480px) {
+                            margin: 0;
+                        }
+                        .profile-person-info-row {
+                            display: flex;
+                            justify-content: flex-end;
+                            @media only screen and (max-width: 480px) {
+                                flex-direction: column;
+                                align-items: center;
+                                margin: 1rem 0;
+                            }
+                            .mobile {
+                                display: none;
+                                @media only screen and (max-width: 480px) {
+                                    display: block;
+                                }
+                            }
+                        }
+                        .profile-person-info-row.mobile {
+                            display: none;
+                            @media only screen and (max-width: 480px) {
+                                display: flex;
+                            }
+                        }
+                        .profile-person-name {
+                            font-size: 4.8rem;
+                            @media only screen and (max-width: 480px) {
+                                font-size: 3.6rem;
+                            }
+                        }
+                        .profile-person-info-image-wrapper {
+                            padding: 4px;
+                            background: linear-gradient(#9F24FF, #FF249F);
+                            width: 90%;
+                            border-radius: 50%;
+                            .profile-person-info-image {
+                                width: 100%;
+                                height: auto;
+                                border-radius: 50%;
+                            }
+                        }
+                        .profile-person-username {
+                            color: #7D7D7D;
+                            font-size: 1.8rem;
+                        }
+                    }
+                }
+            }
+            .profile-relations {
+                display: flex;
+                justify-content: flex-end;
+                @media only screen and (max-width: 480px) {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .profile-relation {
+                    display: flex;
+                    align-items: center;
+                    margin: 0 2rem;
+                    @media only screen and (max-width: 480px) {
+                        margin: .5rem 0;
+                    }
+                    .profile-relation-image-box, .profile-relation-count-box, .profile-relation-name-box {
+                        margin: 0 .4rem;
+                    }
+                    .profile-relation-image {
+                        font-size: 1.4rem;
+                    }
+                    .profile-relation-count {
+                        color: #7F7F7F;
+                        font-size: 1.4rem;
+                    }
+                    .profile-relation-name {
+                        font-size: 1.4rem;
+                        transition: .1s ease;
+                        cursor: pointer;
+                    }
+                    .profile-relation-name:hover {
+                        color: #7D7D7D
+                    }
+                }
+            }
+        }
+    }
+}
+
+hr {
+    width: 100%;
+}

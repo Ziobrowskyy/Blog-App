@@ -84,9 +84,11 @@ app.get("/", Site.index)
 
 app.get("/about", Site.index)
 
-app.get("/admin-panel", User.auth("/"), Site.index)
+app.get("/profile/me", User.auth("/"), Site.index)
 
 app.get("/login", User.unauth("/"), Site.index)
+
+app.get("/admin-panel", User.auth("/"), Site.index)
 
 //app.get("/*", Site.index);
 

@@ -27,5 +27,9 @@ code {
     background-color: #F1F1F1;
     grid-column: 2/3;
   }
+
+  @media only screen and (max-width: 480px) {
+    display: block;
+  }
 }
 
